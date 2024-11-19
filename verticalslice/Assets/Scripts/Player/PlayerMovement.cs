@@ -73,8 +73,6 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
-
-        Debug.Log(rb.velocity.magnitude);
     }
 
     public void Move(InputAction.CallbackContext con)

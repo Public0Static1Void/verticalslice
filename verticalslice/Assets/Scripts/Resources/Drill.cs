@@ -18,9 +18,11 @@ public class Drill : MonoBehaviour
 
     [SerializeField] private bool can_drill;
 
+    RaycastHit hit;
 
     void Start()
     {
+        efficency = 0;
         StartDrill();
     }
     void Update()
@@ -50,18 +52,51 @@ public class Drill : MonoBehaviour
 
     public void StartDrill()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, -transform.up, out hit, transform.localScale.x))
+        Vector3[] directions = {
+                    new Vector3(transform.position.x - transform.localScale.x / 2, transform.position.y, transform.position.z),
+                    new Vector3(transform.position.x + transform.localScale.x / 2, transform.position.y, transform.position.z),
+                    new Vector3(transform.position.x, transform.position.y, transform.position.z + transform.localScale.z / 2),
+                    new Vector3(transform.position.x, transform.position.y, transform.position.z - transform.localScale.z / 2) };
+
+        for (int i = 0; i < directions.Length; i++)
         {
-            if (hit.transform.TryGetComponent<Resource>(out Resource res)) {
-                resource = res;
-                can_drill = true;
-            }
-            else
+            if (Physics.Raycast(directions[i], -transform.up, out hit, transform.localScale.y))
             {
-                Debug.Log("Couldn't init the drill, no resource found");
-                can_drill = false;
+                if (hit.transform.TryGetComponent<Resource>(out Resource r))
+                {
+                    if (r == resource)
+                    {
+                        efficency += 0.25f;
+                    }
+                    else if (resource == null)
+                    {
+                        resource = r;
+                        efficency += 0.25f;
+                    }
+                }
             }
+        }
+
+        if (efficency > 0)
+        {
+            can_drill = true;
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawRay(transform.position, -transform.up * transform.localScale.y);
+
+        Vector3[] directions = {
+            new Vector3(transform.position.x - transform.localScale.x / 2, transform.position.y, transform.position.z), 
+            new Vector3(transform.position.x + transform.localScale.x / 2, transform.position.y, transform.position.z),
+            new Vector3(transform.position.x, transform.position.y, transform.position.z + transform.localScale.z / 2),
+            new Vector3(transform.position.x, transform.position.y, transform.position.z - transform.localScale.z / 2) };
+
+        Gizmos.color = Color.yellow;
+        for (int i = 0; i < directions.Length; i++)
+        {
+            Gizmos.DrawRay(directions[i], -transform.up * transform.localScale.y);
         }
     }
 }
