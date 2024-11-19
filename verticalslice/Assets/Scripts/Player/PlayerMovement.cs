@@ -10,6 +10,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float sprint_speed;
     [SerializeField] private float current_speed;
+    [Header("Camera")]
+    [SerializeField] private float normal_fov;
+    [SerializeField] private float sprinting_fov;
+    [SerializeField] private float current_fov;
 
     private bool is_sprinting;
 
@@ -23,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         current_speed = speed;
+        current_fov = normal_fov;
     }
 
     void Update()
@@ -30,17 +35,26 @@ public class PlayerMovement : MonoBehaviour
         if (input == Vector2.zero)
         {
             current_speed = speed;
+            if (current_fov > normal_fov)
+            {
+                current_fov = Mathf.Lerp(current_fov, normal_fov, Time.deltaTime);
+                Camera.main.fieldOfView = current_fov;
+            }
             return;
         }
 
         if (is_sprinting && current_speed < sprint_speed)
         {
             current_speed = Mathf.Lerp(current_speed, sprint_speed, Time.deltaTime * 2);
+            current_fov = Mathf.Lerp(current_fov, sprinting_fov, Time.deltaTime * 2);
         }
         else if (!is_sprinting && current_speed > speed)
         {
             current_speed = Mathf.Lerp(current_speed, speed, Time.deltaTime * 2);
+            current_fov = Mathf.Lerp(current_fov, normal_fov, Time.deltaTime * 2);
         }
+
+        Camera.main.fieldOfView = current_fov;
     }
 
     void FixedUpdate()
