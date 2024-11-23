@@ -8,7 +8,7 @@ public class Drill : MonoBehaviour
 
     [Header("Stats")]
     public float production;
-    [Range(0, 1)]
+    [Range(0, 2f)]
     public float efficency;
     public float amount_stored;
     public float max_stored;
@@ -17,6 +17,7 @@ public class Drill : MonoBehaviour
     private float delta;
 
     [SerializeField] private bool can_drill;
+    public bool conveyor_connected = false;
 
     RaycastHit hit;
 

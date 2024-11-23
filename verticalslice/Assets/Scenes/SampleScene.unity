@@ -229,6 +229,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &500198833
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 274040272652942415, guid: ac05424fc5ca07b4180e3b4c9454a9a1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 274040272652942415, guid: ac05424fc5ca07b4180e3b4c9454a9a1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 274040272652942415, guid: ac05424fc5ca07b4180e3b4c9454a9a1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 274040272652942415, guid: ac05424fc5ca07b4180e3b4c9454a9a1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.3615892
+      objectReference: {fileID: 0}
+    - target: {fileID: 274040272652942415, guid: ac05424fc5ca07b4180e3b4c9454a9a1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 274040272652942415, guid: ac05424fc5ca07b4180e3b4c9454a9a1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.9323375
+      objectReference: {fileID: 0}
+    - target: {fileID: 274040272652942415, guid: ac05424fc5ca07b4180e3b4c9454a9a1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 274040272652942415, guid: ac05424fc5ca07b4180e3b4c9454a9a1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 274040272652942415, guid: ac05424fc5ca07b4180e3b4c9454a9a1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 137.604
+      objectReference: {fileID: 0}
+    - target: {fileID: 274040272652942415, guid: ac05424fc5ca07b4180e3b4c9454a9a1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4896915743151392791, guid: ac05424fc5ca07b4180e3b4c9454a9a1, type: 3}
+      propertyPath: m_Name
+      value: Conveyor (4)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ac05424fc5ca07b4180e3b4c9454a9a1, type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,6 +660,7 @@ GameObject:
   - component: {fileID: 850426366}
   - component: {fileID: 850426365}
   - component: {fileID: 850426369}
+  - component: {fileID: 850426370}
   m_Layer: 0
   m_Name: Gold
   m_TagString: Untagged
@@ -710,6 +768,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   r_name: Gold
   id: 0
+  r_model: {fileID: 5285686260450602076, guid: 1e44ea69f00e8e742a08129ac95eec1a, type: 3}
+--- !u!54 &850426370
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850426364}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -797,7 +883,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.48, z: 0.22}
+  m_LocalPosition: {x: 0, y: 0.48, z: 0.018}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -830,8 +916,8 @@ GameObject:
   - component: {fileID: 1961934836}
   - component: {fileID: 1961934835}
   - component: {fileID: 1961934839}
-  m_Layer: 0
-  m_Name: Sphere
+  m_Layer: 6
+  m_Name: Drill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -942,6 +1028,7 @@ MonoBehaviour:
   max_stored: 10
   recoil: 1
   can_drill: 0
+  conveyor_connected: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -951,3 +1038,4 @@ SceneRoots:
   - {fileID: 192326826}
   - {fileID: 850426368}
   - {fileID: 1961934838}
+  - {fileID: 500198833}

@@ -20,7 +20,8 @@ public class CameraMovement : MonoBehaviour
 
         y = Mathf.Clamp(y, -30, 60);
 
-        Quaternion rot = Quaternion.Euler(-y, x, 0);
-        player.rotation = rot;
+        
+        player.rotation = Quaternion.Euler(0, x, 0);
+        transform.rotation = Quaternion.Euler(-y, x, 0);
     }
 }

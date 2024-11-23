@@ -8,6 +8,7 @@ public class ResourceManager : MonoBehaviour
     public static ResourceManager instance { get; private set; }
     public enum Resources { STONE, GOLD, COAL, LAST_NO_USE }
     public List<Resource> resources;
+    public List<int> resources_amounts;
     void Awake()
     {
         if (instance == null)
@@ -27,5 +28,11 @@ public class ResourceManager : MonoBehaviour
         res.r_name = "Coal";
         res.id = 2;
         resources.Add(res);
+
+        resources_amounts = new List<int>();
+        for (int i = 0; i < (int)Resources.LAST_NO_USE; i++)
+        {
+            resources_amounts.Add(0);
+        }
     }
 }
