@@ -40,6 +40,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "OpenBuildMenu",
+                    "type": "Button",
+                    "id": "f7b1fd63-fbe1-47c3-ba96-a68ceebd9dac",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -282,6 +291,50 @@
                     "processors": "",
                     "groups": "Joystick",
                     "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ba97f940-ce5e-4656-a49c-dbf60d71dbc2",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "OpenBuildMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ff1224ab-ef96-4722-bc31-943be033b1eb",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "OpenBuildMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9289a245-5312-4f41-a016-a77238a1ac56",
+                    "path": "<DualShockGamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "OpenBuildMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "34e95170-4a88-4479-b683-d96f7e1b78d0",
+                    "path": "<XInputController>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "OpenBuildMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -816,7 +869,7 @@
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard&Mouse",
                     "action": "OpenBuildMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -827,7 +880,7 @@
                     "path": "<DualShockGamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "OpenBuildMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -838,7 +891,7 @@
                     "path": "<XInputController>/buttonWest",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Gamepad",
                     "action": "OpenBuildMenu",
                     "isComposite": false,
                     "isPartOfComposite": false

@@ -30,7 +30,7 @@ public class Conveyor : MonoBehaviour
 
     private float delta = 0;
     private Vector3 dir;
-    void Start()
+    public void StartConveyor()
     {
         resources_in_conveyor = new List<GameObject>();
         Collider[] colls = Physics.OverlapSphere(transform.position, conveyor_range, drill_layer);

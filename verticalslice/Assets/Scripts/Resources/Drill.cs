@@ -21,11 +21,6 @@ public class Drill : MonoBehaviour
 
     RaycastHit hit;
 
-    void Start()
-    {
-        efficency = 0;
-        StartDrill();
-    }
     void Update()
     {
         if (can_drill)
@@ -53,6 +48,7 @@ public class Drill : MonoBehaviour
 
     public void StartDrill()
     {
+        efficency = 0;
         Vector3[] directions = {
                     new Vector3(transform.position.x - transform.localScale.x / 2, transform.position.y, transform.position.z),
                     new Vector3(transform.position.x + transform.localScale.x / 2, transform.position.y, transform.position.z),
