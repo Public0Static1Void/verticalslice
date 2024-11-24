@@ -632,7 +632,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 812909951}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -800,6 +800,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: f7b1fd63-fbe1-47c3-ba96-a68ceebd9dac
     m_ActionName: Player/OpenBuildMenu[/XInputControllerWindows/buttonWest,/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 812909959}
+        m_TargetAssemblyTypeName: Builder, Assembly-CSharp
+        m_MethodName: ChangeLength
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 161c9fed-382f-4337-99b7-eac75a7b58d6
+    m_ActionName: Player/ChangeDistance[/Mouse/scroll,/XInputControllerWindows/rightStick]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 812909959}
+        m_TargetAssemblyTypeName: Builder, Assembly-CSharp
+        m_MethodName: ChangeModeOrDelete
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 5cd5c5f6-a366-4e36-8403-30ebd0ab2922
+    m_ActionName: Player/RightClick[/Mouse/rightButton,/XInputControllerWindows/buttonEast]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -823,6 +855,11 @@ MonoBehaviour:
   build_menu: {fileID: 1707878464}
   textFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   curr_build: 2
+  offset_from_ground: 2
+  distance_from_player: 5
+  relocate: 0
+  right_click_pessed: 0
+  distance_mode: 0
 --- !u!1 &850426364
 GameObject:
   m_ObjectHideFlags: 0
