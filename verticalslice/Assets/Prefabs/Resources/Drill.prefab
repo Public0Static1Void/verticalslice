@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4352995173319108204}
   - component: {fileID: 6160752428091685401}
   - component: {fileID: 4793193087150773773}
+  - component: {fileID: 3220970033587587762}
   m_Layer: 6
   m_Name: Drill
   m_TagString: Untagged
@@ -126,3 +127,16 @@ MonoBehaviour:
   recoil: 1
   can_drill: 0
   conveyor_connected: 0
+--- !u!114 &3220970033587587762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4364052898318508080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c6bdd3b03b0e7743b8f9e0e93b3f1d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  life: 1

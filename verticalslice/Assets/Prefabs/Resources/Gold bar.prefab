@@ -122,6 +122,7 @@ MonoBehaviour:
   r_name: Gold
   id: 0
   r_model: {fileID: 5285686260450602076}
+  resource_type: 1
 --- !u!54 &5594514086066772890
 Rigidbody:
   m_ObjectHideFlags: 0

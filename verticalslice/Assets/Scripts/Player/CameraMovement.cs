@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class CameraMovement : MonoBehaviour
     [Header("Speed")]
     [SerializeField] private float cameraSpeed;
     float x, y;
+
+    Vector2 inp;
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -15,13 +18,20 @@ public class CameraMovement : MonoBehaviour
 
     void Update()
     {
-        x += Input.GetAxis("Mouse X") * cameraSpeed * Time.deltaTime;
-        y += Input.GetAxis("Mouse Y") * cameraSpeed * Time.deltaTime;
+        x += inp.x * cameraSpeed * Time.deltaTime;
+        y += inp.y * cameraSpeed * Time.deltaTime;
 
         y = Mathf.Clamp(y, -30, 60);
 
-        
+
         player.rotation = Quaternion.Euler(0, x, 0);
         transform.rotation = Quaternion.Euler(-y, x, 0);
+    }
+
+    public void ChangeRotation(InputAction.CallbackContext con)
+    {
+        inp = con.ReadValue<Vector2>();
+        inp = inp.normalized;
+        Debug.Log(inp);
     }
 }

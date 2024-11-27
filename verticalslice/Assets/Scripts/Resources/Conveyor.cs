@@ -22,7 +22,7 @@ public class Conveyor : MonoBehaviour
     public LayerMask conveyor_layer;
 
     private Drill nearest_drill;
-    [SerializeField] private Conveyor nearest_conveyor;
+    public Conveyor nearest_conveyor;
 
     private bool can_extract = false;
 
@@ -67,9 +67,7 @@ public class Conveyor : MonoBehaviour
                     nearest_conveyor.OrientateMineral();
                 
                 nearest_conveyor = null;
-
             }
-            
         }
         else
         {
@@ -100,12 +98,33 @@ public class Conveyor : MonoBehaviour
                     {
                         nearest_conveyor.conveyor_stored++;
                         nearest_conveyor.resources_in_conveyor.Add(resources_in_conveyor[i]);
+                        nearest_conveyor.current_resource = resources_in_conveyor[i].GetComponent<Resource>();
                         nearest_conveyor.OrientateMineral();
                     }
                     if (conveyor_stored > 0)
                         conveyor_stored--;
                     resources_in_conveyor.Remove(resources_in_conveyor[i]);
                 }
+            }
+        }
+        else if (conveyor_stored > 0 && nearest_conveyor == null && connected_to_conveyor)
+        {
+            Deposite(1);
+        }
+    }
+
+    public void Deposite(int amount)
+    {
+        for (int i = 0; i < resources_in_conveyor.Count; i++)
+        {
+            Debug.Log("Distance: " + Vector3.Distance(resources_in_conveyor[i].transform.position, transform.position));
+            if (Vector3.Distance(resources_in_conveyor[i].transform.position, transform.position) < 1.5f)
+            {
+                conveyor_stored -= amount;
+                ResourceManager.instance.AddResource(current_resource.resource_type, 1);
+                Destroy(resources_in_conveyor[i]);
+                resources_in_conveyor.Remove(resources_in_conveyor[i]);
+                break;
             }
         }
     }

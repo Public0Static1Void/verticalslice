@@ -7,29 +7,34 @@ using UnityEngine.UI;
 
 public class Builder : MonoBehaviour
 {
-    public enum Buildings { CONVEYOR, DRILL, LAST_NO_USE }
+    [Header("References")]
     public List<GameObject> buildings;
 
     private bool open_menu = false;
     [SerializeField] private GameObject build_menu;
     [SerializeField] private Font textFont;
 
-    public Buildings curr_build = Buildings.LAST_NO_USE;
+    public Material holographic_material;
+    private Material[] object_original_materials;
+
+    public BuildingManager.Buildings curr_build = BuildingManager.Buildings.LAST_NO_USE;
     GameObject curr_build_ob;
+    
 
     [Header("Stats")]
     [SerializeField] private float offset_from_ground;
-    [SerializeField] private float distance_from_player;
+    [SerializeField] private float distance_from_player, min_distance_from_player = 1;
     private float max_distance_from_player, max_offset_from_ground;
 
     public bool relocate = false;
     public bool right_click_pressed = false;
     private float delta = 0;
-    public enum DistanceMode { UP, FORWARD }
+    public enum DistanceMode { UP, FORWARD, LAST_NO_USE }
     public DistanceMode distance_mode = DistanceMode.FORWARD;
     void Start()
     {
-        if (buildings.Count > (int)Buildings.LAST_NO_USE)
+        buildings = BuildingManager.Instance.buildings_prefabs;
+        if (buildings.Count > (int)BuildingManager.Buildings.LAST_NO_USE)
         {
             Debug.LogWarning("There are more buildings in the list that in the enum");
         }
@@ -37,22 +42,27 @@ public class Builder : MonoBehaviour
         CreateGrid(build_menu.transform.GetChild(0).gameObject);
         build_menu.SetActive(false);
 
-        max_distance_from_player = distance_from_player;
-        max_offset_from_ground = offset_from_ground;
+        max_distance_from_player = distance_from_player * 1.5f;
+        max_offset_from_ground = offset_from_ground * 1.5f;
+
+        curr_build = BuildingManager.Buildings.LAST_NO_USE;
     }
 
     void Update()
     {
         if (right_click_pressed)
         {
+            // Si el jugador mantiene el click derecho por + de 1 segundo, cancelará la construcción, sino cambiará el modo de distancia
             delta += Time.deltaTime;
             if (delta > 1)
             {
-                distance_mode = DistanceMode.UP;
+                CancelBuilding();
             }
             else
             {
-                distance_mode = DistanceMode.FORWARD;
+                distance_mode = (DistanceMode)((int)distance_mode + 1);
+                if (distance_mode == DistanceMode.LAST_NO_USE)
+                    distance_mode = DistanceMode.UP;
             }
         }
     }
@@ -64,9 +74,9 @@ public class Builder : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(curr_build_ob.transform.position, -transform.up, out hit))
             {
-                if (hit.distance != offset_from_ground)
+                if (hit.distance != offset_from_ground + curr_build_ob.transform.localScale.y / 2)
                 {
-                    float new_y = Mathf.Lerp(curr_build_ob.transform.position.y, hit.point.y + offset_from_ground, Time.fixedDeltaTime * 3);
+                    float new_y = Mathf.Lerp(curr_build_ob.transform.position.y, hit.point.y + offset_from_ground + curr_build_ob.transform.localScale.y / 2, Time.fixedDeltaTime * 3);
                     curr_build_ob.transform.position = new Vector3(curr_build_ob.transform.position.x, new_y, curr_build_ob.transform.position.z);
                 }
             }
@@ -97,7 +107,7 @@ public class Builder : MonoBehaviour
 
     void CreateGrid(GameObject parent)
     {
-        for (int i = 0; i < (int)Buildings.LAST_NO_USE; i++)
+        for (int i = 0; i < (int)BuildingManager.Buildings.LAST_NO_USE; i++)
         {
             GameObject ob = new GameObject();
             ob.name = buildings[i].name;
@@ -114,7 +124,7 @@ public class Builder : MonoBehaviour
 
             UnityEngine.UI.Button bt = ob.AddComponent<UnityEngine.UI.Button>();
             int aux = i;
-            bt.onClick.AddListener(() => CreateBuilding((Buildings)aux)); // Añade el evento que saldrá al pulsar el botón
+            bt.onClick.AddListener(() => CreateBuilding((BuildingManager.Buildings)aux)); // Añade el evento que saldrá al pulsar el botón
 
             Navigation nav = new Navigation();
             nav.mode = Navigation.Mode.None;
@@ -122,7 +132,7 @@ public class Builder : MonoBehaviour
         }
     }
 
-    void CreateBuilding(Buildings build)
+    void CreateBuilding(BuildingManager.Buildings build)
     {
         build_menu.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
@@ -131,35 +141,54 @@ public class Builder : MonoBehaviour
 
         Debug.Log("Building " + build);
         curr_build_ob = Instantiate(buildings[(int)build], transform.position + (transform.forward * distance_from_player), Quaternion.identity);
-        
+        /// Guarda el material original del objeto y le pone uno holográfico
+        object_original_materials = curr_build_ob.GetComponent<MeshRenderer>().materials;
+        curr_build_ob.GetComponent<MeshRenderer>().SetMaterials(new List<Material> { holographic_material });
         curr_build = build;
+
+        min_distance_from_player = curr_build_ob.transform.localScale.z / 2 + 0.5f;
+
         relocate = true;
     }
     public void PlaceBuilding(InputAction.CallbackContext con)
     {
-        if (con.performed && curr_build != Buildings.LAST_NO_USE)
+        if (con.performed && curr_build != BuildingManager.Buildings.LAST_NO_USE)
         {
             relocate = false;
 
             switch (curr_build)
             {
-                case Buildings.CONVEYOR:
+                case BuildingManager.Buildings.CONVEYOR:
                     curr_build_ob.GetComponent<Conveyor>().StartConveyor();
                     break;
-                case Buildings.DRILL:
+                case BuildingManager.Buildings.DRILL:
                     curr_build_ob.GetComponent<Drill>().StartDrill();
+                    break;
+                case BuildingManager.Buildings.CORE:
+                    curr_build_ob.GetComponent<Core>().StartCore();
                     break;
             }
 
             curr_build_ob.transform.rotation = buildings[(int)curr_build].transform.rotation;
+            curr_build_ob.GetComponent<MeshRenderer>().materials = object_original_materials;
             curr_build_ob = null;
-            curr_build = Buildings.LAST_NO_USE;
+            curr_build = BuildingManager.Buildings.LAST_NO_USE;
         }
+    }
+
+    void CancelBuilding()
+    {
+        Destroy(curr_build_ob);
+        relocate = false;
+        curr_build_ob = null;
+        curr_build = BuildingManager.Buildings.LAST_NO_USE;
+        right_click_pressed = false;
+        delta = 0;
     }
 
     public void ChangeLength(InputAction.CallbackContext con)
     {
-        if (con.performed && curr_build != Buildings.LAST_NO_USE)
+        if (con.performed && curr_build != BuildingManager.Buildings.LAST_NO_USE)
         {
             Vector2 input = con.ReadValue<Vector2>();
             Debug.Log(input);
@@ -171,7 +200,7 @@ public class Builder : MonoBehaviour
                     break;
                 case DistanceMode.FORWARD:
                     distance_from_player += input.y / 100;
-                    distance_from_player = Mathf.Clamp(distance_from_player, 1, max_distance_from_player);
+                    distance_from_player = Mathf.Clamp(distance_from_player, min_distance_from_player, max_distance_from_player);
                     break;
             }
         }
@@ -179,7 +208,7 @@ public class Builder : MonoBehaviour
 
     public void ChangeModeOrDelete(InputAction.CallbackContext con)
     {
-        if (curr_build == Buildings.LAST_NO_USE) return;
+        if (curr_build == BuildingManager.Buildings.LAST_NO_USE) return;
 
         if (con.performed)
         {

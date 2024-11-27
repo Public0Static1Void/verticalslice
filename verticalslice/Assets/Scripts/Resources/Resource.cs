@@ -5,6 +5,7 @@ public class Resource : MonoBehaviour
     public string r_name;
     public int id;
     public GameObject r_model;
+    public ResourceManager.Resources resource_type;
 
     private Rigidbody rb;
     private void Start()

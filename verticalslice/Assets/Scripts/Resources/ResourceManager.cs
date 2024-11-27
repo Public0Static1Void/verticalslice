@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ResourceManager : MonoBehaviour
@@ -9,7 +10,7 @@ public class ResourceManager : MonoBehaviour
     public enum Resources { STONE, GOLD, COAL, LAST_NO_USE }
     public List<Resource> resources;
     public List<int> resources_amounts;
-    void Awake()
+    void Start()
     {
         if (instance == null)
             instance = this;
@@ -19,20 +20,25 @@ public class ResourceManager : MonoBehaviour
         resources = new List<Resource>();
 
         Resource res = new Resource();
-        res.r_name = "Stone";
-        res.id = 0;
-        resources.Add(res);
-        res.r_name = "Gold";
-        res.id = 1;
-        resources.Add(res);
-        res.r_name = "Coal";
-        res.id = 2;
-        resources.Add(res);
+        List<ArrayList> resources_from_db = Database.SendQuery("SELECT * FROM Resources");
+
+        for (int i = 0; i <  resources_from_db.Count; i++)
+        {
+            res.id = int.Parse("" + resources_from_db[i][0]);
+            Debug.Log(resources_from_db[i][1].ToString());
+            res.r_name = resources_from_db[i][1].ToString();
+            resources.Add(res);
+        }
 
         resources_amounts = new List<int>();
         for (int i = 0; i < (int)Resources.LAST_NO_USE; i++)
         {
             resources_amounts.Add(0);
         }
+    }
+
+    public void AddResource(Resources res, int amount)
+    {
+        resources_amounts[(int)res] += amount;
     }
 }
