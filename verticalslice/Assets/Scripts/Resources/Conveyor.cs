@@ -21,7 +21,7 @@ public class Conveyor : MonoBehaviour
     public LayerMask drill_layer;
     public LayerMask conveyor_layer;
 
-    private Drill nearest_drill;
+    public Drill nearest_drill;
     public Conveyor nearest_conveyor;
 
     private bool can_extract = false;
@@ -91,6 +91,7 @@ public class Conveyor : MonoBehaviour
             for (int i = 0; i < resources_in_conveyor.Count; i++)
             {
                 resources_in_conveyor[i].transform.Translate(dir * conveyor_speed * Time.deltaTime, Space.World);
+                OrientateMineral();
 
                 if (Vector3.Distance(resources_in_conveyor[i].transform.position, nearest_conveyor.transform.position + nearest_conveyor.offset) < 0.1f)
                 {
@@ -155,7 +156,7 @@ public class Conveyor : MonoBehaviour
     {
         if (nearest_conveyor == null || resources_in_conveyor.Count <= 0) return;
 
-        Vector3 point = nearest_conveyor.transform.position - transform.position;
+        Vector3 point = (nearest_conveyor.transform.position + offset) - resources_in_conveyor[resources_in_conveyor.Count - 1].transform.position;
         dir = point.normalized;
         Quaternion rot = Quaternion.LookRotation(dir, transform.up);
         resources_in_conveyor[resources_in_conveyor.Count - 1].transform.rotation = rot;

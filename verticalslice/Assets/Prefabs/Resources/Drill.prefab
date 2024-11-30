@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 3220970033587587762}
   m_Layer: 6
   m_Name: Drill
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -139,4 +139,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c6bdd3b03b0e7743b8f9e0e93b3f1d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  life: 1
+  life: 20
+  building_type: 1

@@ -18,10 +18,24 @@ public class CameraMovement : MonoBehaviour
 
     void Update()
     {
-        x += inp.x * cameraSpeed * Time.deltaTime;
-        y += inp.y * cameraSpeed * Time.deltaTime;
+        if (inp.x > 1 || inp.x < -1)
+        {
+            x += Input.GetAxis("Mouse X") * cameraSpeed * Time.deltaTime;
+        }
+        else
+        {
+            x += inp.x * cameraSpeed * Time.deltaTime;
+        }
+        if (inp.y > 1 || inp.y < -1)
+        {
+            y += Input.GetAxis("Mouse Y") * cameraSpeed * Time.deltaTime;
+        }
+        else
+        {
+            y += inp.y * cameraSpeed * Time.deltaTime;
+        }
 
-        y = Mathf.Clamp(y, -30, 60);
+        y = Mathf.Clamp(y, -35, 60);
 
 
         player.rotation = Quaternion.Euler(0, x, 0);
@@ -31,7 +45,7 @@ public class CameraMovement : MonoBehaviour
     public void ChangeRotation(InputAction.CallbackContext con)
     {
         inp = con.ReadValue<Vector2>();
-        inp = inp.normalized;
+        
         Debug.Log(inp);
     }
 }

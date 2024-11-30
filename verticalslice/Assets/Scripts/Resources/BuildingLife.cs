@@ -5,6 +5,7 @@ using UnityEngine;
 public class BuildingLife : MonoBehaviour
 {
     public int life = 1;
+    public BuildingManager.Buildings building_type;
     
     public void ChangeLife(int amount)
     {
