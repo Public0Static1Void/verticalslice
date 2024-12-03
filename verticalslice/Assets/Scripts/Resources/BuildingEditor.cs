@@ -49,6 +49,8 @@ public class BuildingEditor : MonoBehaviour
 
         if (line_r != null)
             line_r.enabled = false;
+
+        trackedObjectMaterials.Clear();
     }
 
     public void SelectBuilding(InputAction.CallbackContext con)
@@ -161,7 +163,6 @@ public class BuildingEditor : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         if (!canEdit)
         {
             return;
