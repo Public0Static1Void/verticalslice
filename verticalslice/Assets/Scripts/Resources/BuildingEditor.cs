@@ -178,19 +178,27 @@ public class BuildingEditor : MonoBehaviour
 
     private IEnumerator ChangeMaterial(GameObject ob, RaycastHit hit)
     {
-        Material[] materials = hit.transform.GetComponent<MeshRenderer>().materials;
-        Material[] m = new Material[materials.Length + 1];
-        for (int i = 0; i < materials.Length; i++)
+        if (!trackedObjectMaterials.ContainsKey(ob))
         {
-            m[i] = materials[i];
+            Material[] materials = hit.transform.GetComponent<MeshRenderer>().materials;
+
+            trackedObjectMaterials.Add(ob, materials);
+
+            Material[] m = new Material[materials.Length + 1];
+            for (int i = 0; i < materials.Length; i++)
+            {
+                m[i] = materials[i];
+            }
+            m[materials.Length] = outline_material;
+
+            hit.transform.GetComponent<MeshRenderer>().materials = m;
+
+            yield return new WaitForSeconds(10);
+
+            hit.transform.GetComponent<MeshRenderer>().materials = trackedObjectMaterials[ob];
         }
-        m[materials.Length] = outline_material;
 
-        hit.transform.GetComponent<MeshRenderer>().materials = m;
-
-        yield return new WaitForSeconds(10);
-
-        hit.transform.GetComponent<MeshRenderer>().materials = materials;
+        yield return null;
     }
 
     public void CheckRightClick(InputAction.CallbackContext con)
