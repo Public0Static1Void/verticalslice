@@ -14,12 +14,16 @@ public class BuildingEditor : MonoBehaviour
     [SerializeField] private GameObject selected_building;
     [SerializeField] private TMP_Text selected_building_text;
     [SerializeField] private Material line_material;
+    [SerializeField] private Material outline_material;
 
     private bool right_click_pressed = false;
     private float delta = 0;
 
     GameObject line;
     LineRenderer line_r;
+
+    private Dictionary<GameObject, Material[]> trackedObjectMaterials = new Dictionary<GameObject, Material[]>();
+
     public void ChangeEditorMode(InputAction.CallbackContext con)
     {
         if (con.performed)
@@ -43,7 +47,8 @@ public class BuildingEditor : MonoBehaviour
         delta = 0;
         right_click_pressed = false;
 
-        line_r.enabled = false;
+        if (line_r != null)
+            line_r.enabled = false;
     }
 
     public void SelectBuilding(InputAction.CallbackContext con)
@@ -152,6 +157,40 @@ public class BuildingEditor : MonoBehaviour
                 DeselectBuilding();
             }
         }
+    }
+
+    private void FixedUpdate()
+    {
+
+        if (!canEdit)
+        {
+            return;
+        }
+        RaycastHit hit;
+        if (Physics.SphereCast(transform.position, 1.5f, Camera.main.transform.forward, out hit, edit_range))
+        {
+            if (hit.collider.tag == builds_tag)
+            {
+                StartCoroutine(ChangeMaterial(hit.transform.gameObject, hit));
+            }
+        }
+    }
+
+    private IEnumerator ChangeMaterial(GameObject ob, RaycastHit hit)
+    {
+        Material[] materials = hit.transform.GetComponent<MeshRenderer>().materials;
+        Material[] m = new Material[materials.Length + 1];
+        for (int i = 0; i < materials.Length; i++)
+        {
+            m[i] = materials[i];
+        }
+        m[materials.Length] = outline_material;
+
+        hit.transform.GetComponent<MeshRenderer>().materials = m;
+
+        yield return new WaitForSeconds(10);
+
+        hit.transform.GetComponent<MeshRenderer>().materials = materials;
     }
 
     public void CheckRightClick(InputAction.CallbackContext con)
