@@ -31,6 +31,11 @@ public class Builder : MonoBehaviour
     private float delta = 0;
     public enum DistanceMode { UP, FORWARD, LAST_NO_USE }
     public DistanceMode distance_mode = DistanceMode.FORWARD;
+
+    private List<BuildingLife> buildings_life = new List<BuildingLife>();
+
+    // Building rotation
+    private float building_rot;
     void Start()
     {
         buildings = BuildingManager.Instance.buildings_prefabs;
@@ -46,6 +51,11 @@ public class Builder : MonoBehaviour
         max_offset_from_ground = offset_from_ground * 1.5f;
 
         curr_build = BuildingManager.Buildings.LAST_NO_USE;
+
+        for (int i = 0; i < buildings.Count; i++)
+        {
+            buildings_life.Add(buildings[i].GetComponent<BuildingLife>());
+        }
     }
 
     void Update()
@@ -72,7 +82,7 @@ public class Builder : MonoBehaviour
         if (relocate)
         {
             RaycastHit hit;
-            if (Physics.Raycast(curr_build_ob.transform.position, -transform.up, out hit))
+            if (Physics.Raycast(curr_build_ob.transform.position + Vector3.up, -Vector3.up, out hit))
             {
                 if (hit.distance != offset_from_ground + curr_build_ob.transform.localScale.y / 2)
                 {
@@ -146,12 +156,25 @@ public class Builder : MonoBehaviour
         curr_build_ob.GetComponent<MeshRenderer>().SetMaterials(new List<Material> { holographic_material });
         curr_build = build;
 
+        curr_build_ob.GetComponent<Collider>().enabled = false;
+
         min_distance_from_player = curr_build_ob.transform.localScale.z / 2 + 0.5f;
+
+        building_rot = 0;
 
         relocate = true;
     }
     public void PlaceBuilding(InputAction.CallbackContext con)
     {
+        if (curr_build_ob == null) return;
+
+        if (Physics.Raycast(curr_build_ob.transform.position + Vector3.up, -transform.up, out RaycastHit hit))
+        {
+            if (curr_build_ob.transform.position.y < offset_from_ground + hit.point.y + curr_build_ob.transform.localScale.y / 2)
+            {
+                curr_build_ob.transform.position = new Vector3(curr_build_ob.transform.position.x, offset_from_ground + hit.point.y + curr_build_ob.transform.localScale.y / 2, curr_build_ob.transform.position.z);
+            }
+        }
         if (con.performed && curr_build != BuildingManager.Buildings.LAST_NO_USE)
         {
             relocate = false;
@@ -169,8 +192,8 @@ public class Builder : MonoBehaviour
                     break;
             }
 
-            curr_build_ob.transform.rotation = buildings[(int)curr_build].transform.rotation;
             curr_build_ob.GetComponent<MeshRenderer>().materials = object_original_materials;
+            curr_build_ob.GetComponent<Collider>().enabled = true;
             curr_build_ob = null;
             curr_build = BuildingManager.Buildings.LAST_NO_USE;
         }
@@ -192,16 +215,24 @@ public class Builder : MonoBehaviour
         {
             Vector2 input = con.ReadValue<Vector2>();
             Debug.Log(input);
-            switch (distance_mode)
+            if (!buildings_life[(int)curr_build].canRotate)
             {
-                case DistanceMode.UP:
-                    offset_from_ground += input.y / 100;
-                    offset_from_ground = Mathf.Clamp(offset_from_ground, 0.5f, max_offset_from_ground);
-                    break;
-                case DistanceMode.FORWARD:
-                    distance_from_player += input.y / 100;
-                    distance_from_player = Mathf.Clamp(distance_from_player, min_distance_from_player, max_distance_from_player);
-                    break;
+                switch (distance_mode)
+                {
+                    case DistanceMode.UP:
+                        offset_from_ground += input.y / 100;
+                        offset_from_ground = Mathf.Clamp(offset_from_ground, 0.5f, max_offset_from_ground);
+                        break;
+                    case DistanceMode.FORWARD:
+                        distance_from_player += input.y / 100;
+                        distance_from_player = Mathf.Clamp(distance_from_player, min_distance_from_player, max_distance_from_player);
+                        break;
+                }
+            }
+            else
+            {
+                building_rot += input.y / 75;
+                curr_build_ob.transform.rotation = Quaternion.Euler(new Vector3(0, building_rot));
             }
         }
     }

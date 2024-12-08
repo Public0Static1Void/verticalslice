@@ -94,9 +94,15 @@ public class BuildingEditor : MonoBehaviour
                                 {
                                     conv.nearest_drill = hit.collider.GetComponent<Drill>();
                                     if (!conv.nearest_drill.conveyor_connected)
+                                    {
                                         conv.nearest_drill.conveyor_connected = true;
+                                        conv.can_extract = true;
+                                    }
                                     else
+                                    {
+                                        conv.can_extract = false;
                                         conv.nearest_drill = null;
+                                    }
                                 }
                                 break;
                         }
@@ -110,6 +116,7 @@ public class BuildingEditor : MonoBehaviour
 
     private void SetLineBetweenConveyors(Vector3 pos1, Conveyor conveyor)
     {
+        if (conveyor == null) return;
         if (line == null)
         {
             line = new GameObject("Line");
@@ -195,8 +202,11 @@ public class BuildingEditor : MonoBehaviour
             hit.transform.GetComponent<MeshRenderer>().materials = m;
 
             yield return new WaitForSeconds(10);
-
-            hit.transform.GetComponent<MeshRenderer>().materials = trackedObjectMaterials[ob];
+            if (trackedObjectMaterials.ContainsKey(ob))
+            {
+                hit.transform.GetComponent<MeshRenderer>().materials = trackedObjectMaterials[ob];
+                trackedObjectMaterials.Remove(ob);
+            }
         }
 
         yield return null;

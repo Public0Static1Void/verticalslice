@@ -24,7 +24,7 @@ public class Conveyor : MonoBehaviour
     public Drill nearest_drill;
     public Conveyor nearest_conveyor;
 
-    private bool can_extract = false;
+    public bool can_extract = false;
 
     public List<GameObject> resources_in_conveyor;
 
