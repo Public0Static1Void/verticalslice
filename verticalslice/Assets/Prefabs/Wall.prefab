@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5483022517497558772}
   - component: {fileID: 4648925481706011002}
   - component: {fileID: -2071355927311381505}
+  - component: {fileID: -5849998978006665115}
   m_Layer: 8
   m_Name: Wall
   m_TagString: Building
@@ -118,5 +119,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c6bdd3b03b0e7743b8f9e0e93b3f1d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  life: 1
+  life: 50
+  canRotate: 1
   building_type: 3
+--- !u!208 &-5849998978006665115
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5739981192844397164}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5

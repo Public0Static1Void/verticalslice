@@ -45,13 +45,13 @@ public class PlayerMovement : MonoBehaviour
 
         if (is_sprinting && current_speed < sprint_speed)
         {
-            current_speed = Mathf.Lerp(current_speed, sprint_speed, Time.deltaTime * 2);
-            current_fov = Mathf.Lerp(current_fov, sprinting_fov, Time.deltaTime * 2);
+            current_speed = Mathf.Lerp(current_speed, sprint_speed, Time.deltaTime * 4);
+            current_fov = Mathf.Lerp(current_fov, sprinting_fov, Time.deltaTime * 4);
         }
         else if (!is_sprinting && current_speed > speed)
         {
-            current_speed = Mathf.Lerp(current_speed, speed, Time.deltaTime * 2);
-            current_fov = Mathf.Lerp(current_fov, normal_fov, Time.deltaTime * 2);
+            current_speed = Mathf.Lerp(current_speed, speed, Time.deltaTime * 4);
+            current_fov = Mathf.Lerp(current_fov, normal_fov, Time.deltaTime * 4);
         }
 
         Camera.main.fieldOfView = current_fov;
@@ -61,6 +61,19 @@ public class PlayerMovement : MonoBehaviour
     {
         if (input != Vector2.zero)
         {
+            if (input.x != 0 && input.y <= 0)
+            {
+                current_speed = speed * 0.75f;
+            }
+            else if (input.y < 0)
+            {
+                current_speed = speed * 0.5f;
+            }
+            else if (input.y > 0)
+            {
+                current_speed = speed;
+            }
+
             Vector3 dir = new Vector3(((transform.forward.x * input.y) + (transform.right.x * input.x)) * current_speed * Time.deltaTime, rb.velocity.y,
                                         ((transform.forward.z * input.y) + (transform.right.z * input.x)) * current_speed * Time.deltaTime);
             rb.velocity = dir;
@@ -77,7 +90,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(InputAction.CallbackContext con)
     {
-        input = con.ReadValue<Vector2>();
+        input = con.ReadValue<Vector2>();        
     }
 
     public void Sprint(InputAction.CallbackContext con)

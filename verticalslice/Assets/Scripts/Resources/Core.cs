@@ -4,11 +4,22 @@ using UnityEngine;
 
 public class Core : MonoBehaviour
 {
+    public static Core instance { get; private set; }
+
     [Header("Stats")]
     [SerializeField] private float core_radius;
     [SerializeField] private LayerMask conveyor_layer;
     public void StartCore()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Debug.Log("You can't create two core");
+            Destroy(this.gameObject);
+        }
         CheckSurroundings();
     }
     public void CheckSurroundings()

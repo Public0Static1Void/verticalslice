@@ -24,7 +24,7 @@ public class Builder : MonoBehaviour
     [Header("Stats")]
     [SerializeField] private float offset_from_ground;
     [SerializeField] private float distance_from_player, min_distance_from_player = 1;
-    private float max_distance_from_player, max_offset_from_ground;
+    public float max_distance_from_player, max_offset_from_ground;
 
     public bool relocate = false;
     public bool right_click_pressed = false;
@@ -48,7 +48,6 @@ public class Builder : MonoBehaviour
         build_menu.SetActive(false);
 
         max_distance_from_player = distance_from_player * 1.5f;
-        max_offset_from_ground = offset_from_ground * 1.5f;
 
         curr_build = BuildingManager.Buildings.LAST_NO_USE;
 
@@ -221,7 +220,7 @@ public class Builder : MonoBehaviour
                 {
                     case DistanceMode.UP:
                         offset_from_ground += input.y / 100;
-                        offset_from_ground = Mathf.Clamp(offset_from_ground, 0.5f, max_offset_from_ground);
+                        offset_from_ground = Mathf.Clamp(offset_from_ground, 0, max_offset_from_ground);
                         break;
                     case DistanceMode.FORWARD:
                         distance_from_player += input.y / 100;
