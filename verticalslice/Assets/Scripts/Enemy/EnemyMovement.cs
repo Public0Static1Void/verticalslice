@@ -13,16 +13,20 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private GameObject current_target;
 
     public bool onAttackRange;
-
+    Rigidbody rb;
     void Start()
     {
         nav = GetComponent<NavMeshAgent>();
-        
+        rb = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
         MoveToCore();
+        if (rb.velocity.magnitude > 0.05f)
+        {
+            rb.velocity *= 0.99f;
+        }
     }
 
     public void SetDestiny(GameObject target)

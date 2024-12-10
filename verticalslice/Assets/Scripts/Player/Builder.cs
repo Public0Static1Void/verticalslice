@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -156,6 +157,10 @@ public class Builder : MonoBehaviour
         curr_build = build;
 
         curr_build_ob.GetComponent<Collider>().enabled = false;
+        if (build == BuildingManager.Buildings.WALL)
+        {
+            curr_build_ob.GetComponent<NavMeshObstacle>().carving = false;
+        }
 
         min_distance_from_player = curr_build_ob.transform.localScale.z / 2 + 0.5f;
 
@@ -188,6 +193,9 @@ public class Builder : MonoBehaviour
                     break;
                 case BuildingManager.Buildings.CORE:
                     curr_build_ob.GetComponent<Core>().StartCore();
+                    break;
+                case BuildingManager.Buildings.WALL:
+                    curr_build_ob.GetComponent<NavMeshObstacle>().carving = true;
                     break;
             }
 
