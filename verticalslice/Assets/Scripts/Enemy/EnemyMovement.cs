@@ -7,13 +7,13 @@ public class EnemyMovement : MonoBehaviour
 {
     [Header("Stats")]
     [SerializeField] private float speed;
-    [SerializeField] private float stop_range;
+    public float stop_range;
 
     private NavMeshAgent nav;
     [SerializeField] private GameObject current_target;
 
-    private bool onAttackRange;
-    
+    public bool onAttackRange;
+
     void Start()
     {
         nav = GetComponent<NavMeshAgent>();
@@ -36,7 +36,7 @@ public class EnemyMovement : MonoBehaviour
         
         if (!nav.hasPath)
         {
-            if (Physics.Raycast(transform.position, Core.instance.transform.position, out RaycastHit hit))
+            if (Physics.Raycast(transform.position, Core.instance.transform.position - transform.position, out RaycastHit hit))
             {
                 if (hit.transform.gameObject != Core.instance.transform.gameObject)
                 {
@@ -49,13 +49,15 @@ public class EnemyMovement : MonoBehaviour
             }
         }
 
-        if (Vector3.Distance(transform.position, Core.instance.transform.position) > stop_range)
+        if (Vector3.Distance(transform.position, current_target.transform.position) > stop_range)
         {
             SetDestiny(current_target);
             onAttackRange = false;
+            nav.isStopped = false;
         }
         else
         {
+            nav.isStopped = true;
             onAttackRange = true;
         }
     }
@@ -63,5 +65,12 @@ public class EnemyMovement : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(transform.position, stop_range);
+    }
+    private void OnDrawGizmos()
+    {
+        if (Core.instance != null)
+        {
+            Gizmos.DrawRay(transform.position, Core.instance.transform.position);
+        }
     }
 }

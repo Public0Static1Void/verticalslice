@@ -10,6 +10,7 @@ public class ResourceManager : MonoBehaviour
     public enum Resources { STONE, GOLD, COAL, LAST_NO_USE }
     public List<Resource> resources;
     public List<int> resources_amounts;
+    public List<UnityEngine.UI.Text> resources_text;
     void Start()
     {
         if (instance == null)
@@ -40,5 +41,20 @@ public class ResourceManager : MonoBehaviour
     public void AddResource(Resources res, int amount)
     {
         resources_amounts[(int)res] += amount;
+        if (resources_amounts[(int)res] > 0)
+        {
+            switch (res)
+            {
+                case Resources.GOLD:
+                    resources_text[(int)res].text = "Gold: " + resources_amounts[(int)res];
+                    break;
+                case Resources.COAL:
+                    resources_text[(int)res].text = "Coal: " + resources_amounts[(int)res];
+                    break;
+                case Resources.STONE:
+                    resources_text[(int)res].text = "Stone: " + resources_amounts[(int)res];
+                    break;
+            }
+        }
     }
 }

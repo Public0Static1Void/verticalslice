@@ -9,6 +9,7 @@ public class Core : MonoBehaviour
     [Header("Stats")]
     [SerializeField] private float core_radius;
     [SerializeField] private LayerMask conveyor_layer;
+
     public void StartCore()
     {
         if (instance == null)
