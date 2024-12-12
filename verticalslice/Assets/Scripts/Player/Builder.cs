@@ -37,6 +37,8 @@ public class Builder : MonoBehaviour
 
     // Building rotation
     private float building_rot;
+
+    private float current_offset_from_ground = 0;
     void Start()
     {
         buildings = BuildingManager.Instance.buildings_prefabs;
@@ -88,6 +90,7 @@ public class Builder : MonoBehaviour
                 {
                     float new_y = Mathf.Lerp(curr_build_ob.transform.position.y, hit.point.y + offset_from_ground + curr_build_ob.transform.localScale.y / 2, Time.fixedDeltaTime * 3);
                     curr_build_ob.transform.position = new Vector3(curr_build_ob.transform.position.x, new_y, curr_build_ob.transform.position.z);
+                    current_offset_from_ground = new_y;
                 }
             }
             curr_build_ob.transform.position = new Vector3(
@@ -174,11 +177,12 @@ public class Builder : MonoBehaviour
 
         if (Physics.Raycast(curr_build_ob.transform.position + Vector3.up, -transform.up, out RaycastHit hit))
         {
-            if (curr_build_ob.transform.position.y < offset_from_ground + hit.point.y + curr_build_ob.transform.localScale.y / 2)
+            if (curr_build_ob.transform.position.y < hit.point.y + curr_build_ob.transform.localScale.y / 2)
             {
-                curr_build_ob.transform.position = new Vector3(curr_build_ob.transform.position.x, offset_from_ground + hit.point.y + curr_build_ob.transform.localScale.y / 2, curr_build_ob.transform.position.z);
+                curr_build_ob.transform.position = new Vector3(curr_build_ob.transform.position.x, hit.point.y + curr_build_ob.transform.localScale.y / 2, curr_build_ob.transform.position.z);
             }
         }
+
         if (con.performed && curr_build != BuildingManager.Buildings.LAST_NO_USE)
         {
             relocate = false;

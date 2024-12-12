@@ -18,11 +18,14 @@ public class Conveyor : MonoBehaviour
 
     public bool connected_to_conveyor = false;
 
+    [Header("References")]
     public LayerMask drill_layer;
     public LayerMask conveyor_layer;
 
     public Drill nearest_drill;
     public Conveyor nearest_conveyor;
+
+    [SerializeField] private Material line_material;
 
     public bool can_extract = false;
 
@@ -49,6 +52,7 @@ public class Conveyor : MonoBehaviour
             float dist = 0;
             if (colliders.Length > 0)
             {
+                
                 dist = Vector3.Distance(transform.position, colliders[0].transform.position);
                 nearest_conveyor = colliders[0].transform.GetComponent<Conveyor>();
 
@@ -65,7 +69,21 @@ public class Conveyor : MonoBehaviour
                 nearest_conveyor.connected_to_conveyor = true;
                 if (nearest_conveyor.conveyor_stored > 0)
                     nearest_conveyor.OrientateMineral();
-                
+                /// Set the Linerenderer between conveyors
+                GameObject conv_lr = new GameObject();
+                conv_lr.transform.SetParent(transform);
+                LineRenderer lr = conv_lr.AddComponent<LineRenderer>();
+                Vector3[] pos = new Vector3[2];
+                pos[0] = transform.position;
+                pos[1] = nearest_conveyor.transform.position;
+                lr.SetPositions(pos);
+                lr.startColor = Color.red;
+                lr.endColor = Color.green;
+
+                lr.material = line_material;
+                lr.startWidth = 0.013f;
+                lr.endWidth = 0.013f;
+
                 nearest_conveyor = null;
             }
         }
