@@ -197,6 +197,9 @@ public class Builder : MonoBehaviour
                 case BuildingManager.Buildings.WALL:
                     curr_build_ob.GetComponent<NavMeshObstacle>().carving = true;
                     break;
+                case BuildingManager.Buildings.TURRET:
+                    curr_build_ob.GetComponent<Turret>().Start_Turret();
+                    break;
             }
 
             curr_build_ob.GetComponent<MeshRenderer>().materials = object_original_materials;

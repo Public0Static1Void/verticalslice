@@ -42,6 +42,8 @@ public class BuildingEditor : MonoBehaviour
 
     private void DeselectBuilding()
     {
+        canEdit = false;
+
         selected_building = null;
         selected_building_text.text = "";
         delta = 0;
@@ -58,7 +60,7 @@ public class BuildingEditor : MonoBehaviour
         if (con.performed && canEdit)
         {
             RaycastHit hit;
-            if (Physics.SphereCast(transform.position, 1.5f, Camera.main.transform.forward, out hit, edit_range))
+            if (Physics.Raycast(transform.position, Camera.main.transform.forward, out hit, edit_range))
             {
                 if (hit.collider.tag == builds_tag)
                 {
@@ -160,7 +162,7 @@ public class BuildingEditor : MonoBehaviour
         if (right_click_pressed)
         {
             delta += Time.deltaTime;
-            if (delta > 1)
+            if (delta > 0.75f)
             {
                 Destroy(selected_building);
                 DeselectBuilding();
@@ -175,7 +177,7 @@ public class BuildingEditor : MonoBehaviour
             return;
         }
         RaycastHit hit;
-        if (Physics.SphereCast(transform.position, 1.5f, Camera.main.transform.forward, out hit, edit_range))
+        if (Physics.Raycast(transform.position, Camera.main.transform.forward, out hit, edit_range))
         {
             if (hit.collider.tag == builds_tag)
             {

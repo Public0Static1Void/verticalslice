@@ -53,7 +53,7 @@ public class EnemyMovement : MonoBehaviour
             }
         }
 
-        if (Vector3.Distance(transform.position, current_target.transform.position) > stop_range)
+        if (current_target != null && Vector3.Distance(transform.position, current_target.transform.position) > stop_range)
         {
             SetDestiny(current_target);
             onAttackRange = false;

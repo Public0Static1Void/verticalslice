@@ -16,25 +16,42 @@ public class Turret : MonoBehaviour
 
     public GameObject current_target;
     public GameObject cannon;
-
+    
     public float delta = 0;
-    void Start()
+
+    private bool turret_started = false;
+    private Rigidbody cannon_rb;
+    public void Start_Turret()
     {
-        GetNearestEnemy();
+        cannon = Instantiate(cannon);
+        cannon.transform.position = transform.position + transform.forward + offset;
+        cannon.transform.rotation = transform.rotation;
+        cannon_rb = cannon.GetComponent<Rigidbody>();
+
+        turret_started = true;
     }
 
     private void Update()
     {
+        if (!turret_started) return;
         GetNearestEnemy();
-        OrientateToEnemy();
-        Attack();
+        if (Vector3.Distance(cannon.transform.position, transform.position + transform.forward + offset) < 0.1f)
+        {
+            OrientateToEnemy();
+            Attack();
+        }
     }
 
     void GetNearestEnemy()
     {
         Collider[] colls = Physics.OverlapSphere(transform.position, range, enemy_mask);
 
-        if (colls.Length <= 0) return;
+        if (colls.Length <= 0)
+        {
+            current_target = null;
+            delta = 0;
+            return;
+        }
 
         Transform nearest = colls[0].transform;
         for (int i = 0; i < colls.Length; i++)
@@ -61,7 +78,7 @@ public class Turret : MonoBehaviour
         rot = Quaternion.LookRotation(dif);
         rot = new Quaternion(rot.x, rot.y, rot.z, rot.w);
         cannon.transform.position = transform.forward + transform.position + offset;
-        cannon.transform.rotation = Quaternion.RotateTowards(cannon.transform.rotation, rot, 5);
+        cannon.transform.rotation = Quaternion.RotateTowards(cannon.transform.rotation, rot, 1.5f);
     }
 
     void Attack()
@@ -73,8 +90,28 @@ public class Turret : MonoBehaviour
         {
             current_target.GetComponent<EnemyStats>().ChangeLife(-damage);
             current_target.GetComponent<Rigidbody>().AddForce(transform.forward * knock_back, ForceMode.Impulse);
+
+            cannon_rb.AddForce(-cannon.transform.forward * knock_back, ForceMode.Impulse);
+
             delta = 0;
         }
+    }
+
+    private void FixedUpdate()
+    {
+        if (cannon_rb != null && cannon_rb.velocity.magnitude > 0.1f)
+        {
+            cannon_rb.velocity *= 0.8f;
+        }
+        else if (Vector3.Distance(cannon.transform.position, transform.position + transform.forward + offset) > 0.1f)
+        {
+            cannon.transform.position = Vector3.Lerp(cannon.transform.position, transform.position + transform.forward + offset, Time.fixedDeltaTime * 2);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(cannon);
     }
 
     private void OnDrawGizmosSelected()

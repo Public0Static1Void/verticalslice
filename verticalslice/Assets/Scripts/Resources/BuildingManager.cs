@@ -6,7 +6,7 @@ public class BuildingManager : MonoBehaviour
 {
     public static BuildingManager Instance { get; private set; }
 
-    public enum Buildings { CONVEYOR, DRILL, CORE, WALL, LAST_NO_USE }
+    public enum Buildings { CONVEYOR, DRILL, CORE, WALL, TURRET, LAST_NO_USE }
 
     public List<GameObject> buildings_prefabs;
 

@@ -130,10 +130,17 @@ public class Conveyor : MonoBehaviour
         }
     }
 
+    void OnDestroy()
+    {
+        for (int i = 0; i < resources_in_conveyor.Count; i++)
+        {
+            Destroy(resources_in_conveyor[i]);
+        }
+    }
+
     public void ExtractFromDrill()
     {
-        if (nearest_drill == null)
-            return;
+        if (nearest_drill == null) return;
 
         if (nearest_drill.amount_stored > 0 && conveyor_stored < conveyor_max_stored)
         {

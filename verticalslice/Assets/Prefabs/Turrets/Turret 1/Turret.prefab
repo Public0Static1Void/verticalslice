@@ -13,9 +13,11 @@ GameObject:
   - component: {fileID: 6658421295851050109}
   - component: {fileID: 5811463766621287837}
   - component: {fileID: 6073932252335852791}
+  - component: {fileID: 3622417104210017782}
+  - component: {fileID: 9001100293287434046}
   m_Layer: 0
   m_Name: Turret
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27,13 +29,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9078067799878695138}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.28447017, z: -0, w: 0.95868486}
   m_LocalPosition: {x: -0.6916134, y: 0.1, z: -24.61522}
   m_LocalScale: {x: 1, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: -33.054, z: 0}
 --- !u!33 &6107452454973364107
 MeshFilter:
@@ -127,5 +129,36 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   current_target: {fileID: 0}
-  cannon: {fileID: 0}
+  cannon: {fileID: 2146084073665607041, guid: b70bee6ad01f00c43992ddcfaab7738d, type: 3}
   delta: 0
+--- !u!208 &3622417104210017782
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9078067799878695138}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
+--- !u!114 &9001100293287434046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9078067799878695138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c6bdd3b03b0e7743b8f9e0e93b3f1d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  life: 30
+  canRotate: 1
+  building_type: 4
