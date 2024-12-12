@@ -59,10 +59,11 @@ public class EnemyMovement : MonoBehaviour
             onAttackRange = false;
             nav.isStopped = false;
         }
-        else
+        else if (current_target != null)
         {
             nav.isStopped = true;
             onAttackRange = true;
+            transform.LookAt(current_target.transform.position);
         }
     }
 
@@ -74,6 +75,7 @@ public class EnemyMovement : MonoBehaviour
     {
         if (Core.instance != null)
         {
+            Gizmos.color = Color.yellow;
             Gizmos.DrawRay(transform.position, Core.instance.transform.position);
         }
     }
