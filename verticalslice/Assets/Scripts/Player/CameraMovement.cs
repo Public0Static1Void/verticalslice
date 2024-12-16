@@ -45,7 +45,5 @@ public class CameraMovement : MonoBehaviour
     public void ChangeRotation(InputAction.CallbackContext con)
     {
         inp = con.ReadValue<Vector2>();
-        
-        Debug.Log(inp);
     }
 }

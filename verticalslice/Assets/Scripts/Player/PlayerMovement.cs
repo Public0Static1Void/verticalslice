@@ -14,6 +14,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float normal_fov;
     [SerializeField] private float sprinting_fov;
     [SerializeField] private float current_fov;
+    [SerializeField] private float step_speed;
+
 
     private bool is_sprinting;
 
@@ -21,6 +23,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float decrease_on_static;
 
     private Rigidbody rb;
+
+    public float delta = 0;
 
     Vector2 input;
     void Start()
@@ -41,6 +45,27 @@ public class PlayerMovement : MonoBehaviour
                 Camera.main.fieldOfView = current_fov;
             }
             return;
+        }
+        else if (input.y != 0)
+        {
+            delta += Time.deltaTime;
+
+            if ((delta > 0.5f && delta <= 1) || (delta > 1.5f && delta <= 2))
+            {
+                Camera.main.transform.Translate(-Vector3.up * (step_speed * Time.deltaTime));
+            }
+            if (delta <= 0.5f)
+            {
+                Camera.main.transform.Translate((Vector3.up + Vector3.right) * (step_speed * Time.deltaTime));
+            }
+            else if (delta > 1 && delta <= 1.5f)
+            {
+                Camera.main.transform.Translate((Vector3.up + -Vector3.right) * (step_speed * Time.deltaTime));
+            }
+            else if (delta > 2.2f)
+            {
+                delta = 0;
+            }
         }
 
         if (is_sprinting && current_speed < sprint_speed)

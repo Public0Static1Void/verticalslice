@@ -32,10 +32,11 @@ public class BuildingEditor : MonoBehaviour
             if (!canEdit)
             {
                 DeselectBuilding();
+                GameManager.gm.ShowText("Edit mode OFF", 5);
             }
             else
             {
-                selected_building_text.text = "Edit mode ON";
+                GameManager.gm.ShowText("Edit mode ON", 1);
             }
         }
     }
@@ -43,7 +44,7 @@ public class BuildingEditor : MonoBehaviour
     private void DeselectBuilding()
     {
         canEdit = false;
-
+        
         selected_building = null;
         selected_building_text.text = "";
         delta = 0;
@@ -69,6 +70,7 @@ public class BuildingEditor : MonoBehaviour
                     {
                         selected_building = hit.collider.gameObject;
                         selected_building_text.text = "Selected building: " + hit.collider.name;
+                        GameManager.gm.ShowText("Selected building: " + hit.collider.name);
 
                         SetLineBetweenConveyors(selected_building.transform.position, hit.collider.GetComponent<Conveyor>());
                     }

@@ -7,7 +7,7 @@ using UnityEngine;
 public class ResourceManager : MonoBehaviour
 {
     public static ResourceManager instance { get; private set; }
-    public enum Resources { STONE, GOLD, COAL, LAST_NO_USE }
+    public enum Resources { STONE, GOLD, COAL, IRON, LAST_NO_USE }
     public List<Resource> resources;
     public List<int> resources_amounts;
     public List<UnityEngine.UI.Text> resources_text;
@@ -43,18 +43,44 @@ public class ResourceManager : MonoBehaviour
         resources_amounts[(int)res] += amount;
         if (resources_amounts[(int)res] > 0)
         {
-            switch (res)
-            {
-                case Resources.GOLD:
-                    resources_text[(int)res].text = "Gold: " + resources_amounts[(int)res];
-                    break;
-                case Resources.COAL:
-                    resources_text[(int)res].text = "Coal: " + resources_amounts[(int)res];
-                    break;
-                case Resources.STONE:
-                    resources_text[(int)res].text = "Stone: " + resources_amounts[(int)res];
-                    break;
-            }
+            resources_text[(int)res].text = "" + resources_amounts[(int)res];
         }
+    }
+
+    public bool CheckIfAffordable(BuildingManager.Buildings build)
+    {
+        int gold, coal, stone, iron;
+        BuildingLife bl = BuildingManager.Instance.buildings_prefabs[(int)build].GetComponent<BuildingLife>();
+        gold = bl.gold_cost;
+        coal = bl.coal_cost;
+        stone = bl.stone_cost;
+        iron = bl.iron_cost;
+
+        if (gold < resources_amounts[(int)Resources.GOLD]
+            && coal < resources_amounts[(int)Resources.COAL]
+            && stone < resources_amounts[(int)Resources.STONE]
+            && iron < resources_amounts[(int)Resources.IRON])
+        {
+            resources_amounts[(int)Resources.GOLD] -= gold;
+            resources_amounts[(int)Resources.COAL] -= coal;
+            resources_amounts[(int)Resources.STONE] -= stone;
+            resources_amounts[(int)Resources.IRON] -= iron;
+
+            return true;
+        }
+
+        string txt = "Get more resources to build that ";
+        switch (build)
+        {
+            default: txt += "building!"; break;
+            case BuildingManager.Buildings.CONVEYOR: txt += " Conveyor!"; break;
+            case BuildingManager.Buildings.DRILL: txt += " Drill!"; break;
+            case BuildingManager.Buildings.WALL: txt += " Wall!"; break;
+            case BuildingManager.Buildings.CORE: txt += " Core!"; break;
+            case BuildingManager.Buildings.TURRET: txt += " Turret!"; break;
+        }
+        GameManager.gm.ShowText(txt);
+
+        return false;
     }
 }

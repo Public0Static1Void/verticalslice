@@ -35,5 +35,15 @@ public class BuildingManager : MonoBehaviour
             buildings_prefabs[i].GetComponent<BuildingLife>().canRotate = canRot == 0 ? false : true;
             Debug.Log(buildings_prefabs[i].GetComponent<BuildingLife>().life);
         }
+
+        for (int i = 0; i < (int)Buildings.LAST_NO_USE; i++)
+        {
+            list = Database.SendQuery(string.Format("SELECT gold_cost, stone_cost, coal_cost, iron_cost FROM Builddings_resources WHERE building_name = \"{0}\"", buildings_prefabs[i].name));
+            BuildingLife bl = buildings_prefabs[i].GetComponent<BuildingLife>();
+            bl.gold_cost = int.Parse("" + list[0][0]);
+            bl.stone_cost = int.Parse("" + list[0][1]);
+            bl.coal_cost = int.Parse("" + list[0][2]);
+            bl.iron_cost = int.Parse("" + list[0][3]);
+        }
     }
 }

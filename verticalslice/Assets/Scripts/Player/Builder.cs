@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -13,6 +15,7 @@ public class Builder : MonoBehaviour
 
     private bool open_menu = false;
     [SerializeField] private GameObject build_menu;
+    [SerializeField] private UnityEngine.UI.Text iron_cost, coal_cost, gold_cost; /// Añadir un texto si se ponen más elementos
     [SerializeField] private Font textFont;
 
     public Material holographic_material;
@@ -138,6 +141,14 @@ public class Builder : MonoBehaviour
             UnityEngine.UI.Button bt = ob.AddComponent<UnityEngine.UI.Button>();
             int aux = i;
             bt.onClick.AddListener(() => CreateBuilding((BuildingManager.Buildings)aux)); // Añade el evento que saldrá al pulsar el botón
+            
+            EventTrigger trig = ob.AddComponent<EventTrigger>();
+            EventTrigger.Entry entry = new EventTrigger.Entry();
+            entry.eventID = EventTriggerType.PointerEnter;
+            entry.callback.AddListener((eventData) => ChangeBuildingCostPanel(buildings[aux].GetComponent<BuildingLife>()));
+            trig.triggers.Add(entry);
+            entry.eventID = EventTriggerType.PointerExit;
+            entry.callback.AddListener((ventData) => OnPointerExit());
 
             Navigation nav = new Navigation();
             nav.mode = Navigation.Mode.None;
@@ -145,12 +156,33 @@ public class Builder : MonoBehaviour
         }
     }
 
+    void ChangeBuildingCostPanel(BuildingLife bl)
+    {
+        iron_cost.text = "" + bl.iron_cost;
+        coal_cost.text = "" + bl.coal_cost;
+        gold_cost.text = "" + bl.gold_cost;
+        Debug.Log("aAAA");
+    }
+    void OnPointerExit()
+    {
+        iron_cost.text = "0";
+        coal_cost.text = "0";
+        gold_cost.text = "0";
+    }
+
     void CreateBuilding(BuildingManager.Buildings build)
     {
+        if (curr_build_ob != null)
+        {
+            CancelBuilding();
+        }
         build_menu.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         open_menu = false;
+
+        offset_from_ground = 0;
+        distance_from_player = max_distance_from_player / 2;
 
         Debug.Log("Building " + build);
         curr_build_ob = Instantiate(buildings[(int)build], transform.position + (transform.forward * distance_from_player), Quaternion.identity);
@@ -173,7 +205,7 @@ public class Builder : MonoBehaviour
     }
     public void PlaceBuilding(InputAction.CallbackContext con)
     {
-        if (curr_build_ob == null) return;
+        if (curr_build_ob == null || !ResourceManager.instance.CheckIfAffordable(curr_build)) return;
 
         if (Physics.Raycast(curr_build_ob.transform.position + Vector3.up, -transform.up, out RaycastHit hit))
         {
