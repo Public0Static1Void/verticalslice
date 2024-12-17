@@ -115,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(InputAction.CallbackContext con)
     {
-        input = con.ReadValue<Vector2>();        
+        input = con.ReadValue<Vector2>();
     }
 
     public void Sprint(InputAction.CallbackContext con)

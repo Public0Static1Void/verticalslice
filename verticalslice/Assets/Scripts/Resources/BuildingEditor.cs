@@ -43,6 +43,7 @@ public class BuildingEditor : MonoBehaviour
 
     private void DeselectBuilding()
     {
+        GameManager.gm.ShowText("Edit mode OFF", 2);
         canEdit = false;
         
         selected_building = null;
@@ -70,7 +71,7 @@ public class BuildingEditor : MonoBehaviour
                     {
                         selected_building = hit.collider.gameObject;
                         selected_building_text.text = "Selected building: " + hit.collider.name;
-                        GameManager.gm.ShowText("Selected building: " + hit.collider.name);
+                        GameManager.gm.ShowText("Selected building: " + hit.collider.name, 0);
 
                         SetLineBetweenConveyors(selected_building.transform.position, hit.collider.GetComponent<Conveyor>());
                     }
@@ -79,7 +80,8 @@ public class BuildingEditor : MonoBehaviour
                         switch (bl.building_type)
                         {
                             case BuildingManager.Buildings.CONVEYOR:
-                                if (selected_building.GetComponent<BuildingLife>().building_type == BuildingManager.Buildings.CONVEYOR)
+                                BuildingLife selected_bl = selected_building.GetComponent<BuildingLife>();
+                                if (selected_bl.building_type == BuildingManager.Buildings.CONVEYOR)
                                 {
                                     Conveyor m_conv = selected_building.GetComponent<Conveyor>();
                                     m_conv.nearest_conveyor = hit.collider.GetComponent<Conveyor>();
@@ -88,10 +90,30 @@ public class BuildingEditor : MonoBehaviour
                                     line_r.SetPosition(0, selected_building.transform.position);
                                     line_r.SetPosition(1, m_conv.nearest_conveyor.transform.position);
                                     line_r.enabled = true;
+
+                                    m_conv.can_deposite = true;
+                                }
+                                else if (selected_bl.building_type == BuildingManager.Buildings.DRILL) // Ha seleccionado antes al drill
+                                {
+                                    Conveyor m_conv = bl.GetComponent<Conveyor>();
+                                    m_conv.ConnectToToDrill(selected_building.GetComponent<Drill>());
+                                    m_conv.CreateLineOfConection(new Vector3[2] { m_conv.transform.position, selected_building.transform.position });
+                                }
+                                else if (selected_bl.building_type == BuildingManager.Buildings.CORE) // ha seleccionado antes al core
+                                {
+                                    Conveyor m_conv = bl.GetComponent<Conveyor>();
+                                    selected_building.GetComponent<Core>().CheckSurroundings();
+                                    m_conv.CreateLineOfConection(new Vector3[2] { m_conv.transform.position, selected_building.transform.position });
+                                    m_conv.can_deposite = true;
                                 }
                                 break;
                             case BuildingManager.Buildings.CORE:
                                 hit.collider.GetComponent<Core>().CheckSurroundings();
+                                if (selected_building.TryGetComponent<Conveyor>(out Conveyor conv_m))
+                                {
+                                    conv_m.CreateLineOfConection(new Vector3[2] { conv_m.transform.position, bl.transform.position });
+                                    conv_m.can_deposite = true;
+                                }
                                 break;
                             case BuildingManager.Buildings.DRILL:
                                 if (selected_building.TryGetComponent<Conveyor>(out Conveyor conv))

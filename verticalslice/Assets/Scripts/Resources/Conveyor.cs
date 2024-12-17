@@ -30,6 +30,7 @@ public class Conveyor : MonoBehaviour
     public bool can_extract = false;
 
     public List<GameObject> resources_in_conveyor;
+    public bool can_deposite = true;
 
     private float delta = 0;
     private Vector3 dir;
@@ -39,14 +40,11 @@ public class Conveyor : MonoBehaviour
         Collider[] colls = Physics.OverlapSphere(transform.position, conveyor_range, drill_layer);
         
         if (colls.Length > 0 && colls[0].transform.TryGetComponent<Drill>(out Drill dr)){
-            nearest_drill = dr;
-            if (!nearest_drill.conveyor_connected)
-                nearest_drill.conveyor_connected = true;
-            else
-                nearest_drill = null;
+            ConnectToToDrill(dr);
         }
         if (nearest_drill == null)
         {
+            can_extract = false;
             Debug.Log("Couldn't find a drill or it already has a connection");
             Collider[] colliders = Physics.OverlapSphere(transform.position, conveyor_range, conveyor_layer);
             float dist = 0;
@@ -69,28 +67,40 @@ public class Conveyor : MonoBehaviour
                 nearest_conveyor.connected_to_conveyor = true;
                 if (nearest_conveyor.conveyor_stored > 0)
                     nearest_conveyor.OrientateMineral();
-                /// Set the Linerenderer between conveyors
-                GameObject conv_lr = new GameObject();
-                conv_lr.transform.SetParent(transform);
-                LineRenderer lr = conv_lr.AddComponent<LineRenderer>();
-                Vector3[] pos = new Vector3[2];
-                pos[0] = transform.position;
-                pos[1] = nearest_conveyor.transform.position;
-                lr.SetPositions(pos);
-                lr.startColor = Color.red;
-                lr.endColor = Color.green;
 
-                lr.material = line_material;
-                lr.startWidth = 0.013f;
-                lr.endWidth = 0.013f;
-
-                nearest_conveyor = null;
+                CreateLineOfConection(new Vector3[2] { transform.position, nearest_conveyor.transform.position });
             }
         }
-        else
+    }
+    public void CreateLineOfConection(Vector3[] positions)
+    {
+        /// Set the Linerenderer between conveyors
+        GameObject conv_lr = new GameObject();
+        conv_lr.transform.SetParent(transform);
+        LineRenderer lr = conv_lr.AddComponent<LineRenderer>();
+        Vector3[] pos = new Vector3[2];
+        pos[0] = positions[0];
+        pos[1] = positions[1];
+        lr.SetPositions(pos);
+        lr.startColor = Color.red;
+        lr.endColor = Color.green;
+
+        lr.material = line_material;
+        lr.startWidth = 0.013f;
+        lr.endWidth = 0.013f;
+
+        nearest_conveyor = null;
+    }
+    public void ConnectToToDrill(Drill dr)
+    {
+        nearest_drill = dr;
+        if (!nearest_drill.conveyor_connected)
         {
+            nearest_drill.conveyor_connected = true;
             can_extract = true;
         }
+        else
+            nearest_drill = null;
     }
 
     void Update()
@@ -134,17 +144,12 @@ public class Conveyor : MonoBehaviour
 
     public void Deposite(int amount)
     {
-        for (int i = 0; i < resources_in_conveyor.Count; i++)
+        for (int i = 0; i < resources_in_conveyor.Count && i < amount; i++)
         {
-            Debug.Log("Distance: " + Vector3.Distance(resources_in_conveyor[i].transform.position, transform.position));
-            if (Vector3.Distance(resources_in_conveyor[i].transform.position, transform.position) < 1.5f)
-            {
-                conveyor_stored -= amount;
-                ResourceManager.instance.AddResource(current_resource.resource_type, 1);
-                Destroy(resources_in_conveyor[i]);
-                resources_in_conveyor.Remove(resources_in_conveyor[i]);
-                break;
-            }
+            conveyor_stored --;
+            ResourceManager.instance.AddResource(resources_in_conveyor[i].GetComponent<Resource>().resource_type, 1);
+            Destroy(resources_in_conveyor[i]);
+            resources_in_conveyor.Remove(resources_in_conveyor[i]);
         }
     }
 
@@ -173,9 +178,19 @@ public class Conveyor : MonoBehaviour
             current_resource = nearest_drill.resource;
 
             resources_in_conveyor.Add(Instantiate(current_resource.r_model, transform.position + offset, Quaternion.identity));
+            if (!current_resource.r_model.TryGetComponent<Resource>(out Resource res))
+            {
+                Resource resource = current_resource.r_model.AddComponent<Resource>();
+                resource.r_name = current_resource.r_name;
+                resource.id = current_resource.id;
+                resource.resource_type = current_resource.resource_type;
+                resource.GetComponent<Rigidbody>().useGravity = false;
+            }
             OrientateMineral();
         }
     }
+
+   
 
     public void OrientateMineral()
     {

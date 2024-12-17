@@ -239,7 +239,7 @@ GameObject:
   - component: {fileID: 50692600}
   - component: {fileID: 50692599}
   m_Layer: 5
-  m_Name: Cost
+  m_Name: Gold amount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4055,8 +4055,8 @@ MonoBehaviour:
   resources: []
   resources_amounts: 
   resources_text:
+  - {fileID: 1598582344}
   - {fileID: 50692599}
-  - {fileID: 744539972}
   - {fileID: 1397056885}
   - {fileID: 1598582344}
 --- !u!4 &1310826163
@@ -4340,7 +4340,7 @@ GameObject:
   - component: {fileID: 1397056886}
   - component: {fileID: 1397056885}
   m_Layer: 5
-  m_Name: Cost
+  m_Name: Coal amount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4824,7 +4824,7 @@ GameObject:
   - component: {fileID: 1598582345}
   - component: {fileID: 1598582344}
   m_Layer: 5
-  m_Name: Cost
+  m_Name: Iron amount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
