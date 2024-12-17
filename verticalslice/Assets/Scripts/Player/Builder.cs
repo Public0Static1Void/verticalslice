@@ -149,6 +149,7 @@ public class Builder : MonoBehaviour
             trig.triggers.Add(entry);
             entry.eventID = EventTriggerType.PointerExit;
             entry.callback.AddListener((ventData) => OnPointerExit());
+            trig.triggers.Add(entry);
 
             Navigation nav = new Navigation();
             nav.mode = Navigation.Mode.None;

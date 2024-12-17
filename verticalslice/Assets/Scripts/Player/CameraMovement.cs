@@ -7,7 +7,7 @@ public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private Transform player;
     [Header("Speed")]
-    [SerializeField] private float cameraSpeed;
+    public float cameraSpeed;
     float x, y;
 
     Vector2 inp;
