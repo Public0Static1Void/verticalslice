@@ -20,14 +20,17 @@ public class ResourceManager : MonoBehaviour
 
         resources = new List<Resource>();
 
-        Resource res = new Resource();
         List<ArrayList> resources_from_db = Database.SendQuery("SELECT * FROM Resources");
 
         for (int i = 0; i <  resources_from_db.Count; i++)
         {
+            Resource res = new Resource();
+
             res.id = int.Parse("" + resources_from_db[i][0]);
             Debug.Log(resources_from_db[i][1].ToString());
             res.r_name = resources_from_db[i][1].ToString();
+            res.r_model = UnityEngine.Resources.Load<GameObject>(string.Format("Models/Minerals/{0} {1}", "Ore", res.r_name));
+            res.resource_type = (Resources)i;
             resources.Add(res);
         }
 
@@ -36,6 +39,11 @@ public class ResourceManager : MonoBehaviour
         {
             resources_amounts.Add(0);
         }
+
+        AddResource(Resources.GOLD, 1000);
+        AddResource(Resources.IRON, 1000);
+        AddResource(Resources.STONE, 1000);
+        AddResource(Resources.COAL, 1000);
     }
 
     public void AddResource(Resources res, int amount)
@@ -56,15 +64,15 @@ public class ResourceManager : MonoBehaviour
         stone = bl.stone_cost;
         iron = bl.iron_cost;
 
-        if (gold < resources_amounts[(int)Resources.GOLD]
-            && coal < resources_amounts[(int)Resources.COAL]
-            && stone < resources_amounts[(int)Resources.STONE]
-            && iron < resources_amounts[(int)Resources.IRON])
+        if (gold <= resources_amounts[(int)Resources.GOLD]
+            && coal <= resources_amounts[(int)Resources.COAL]
+            && stone <= resources_amounts[(int)Resources.STONE]
+            && iron <= resources_amounts[(int)Resources.IRON])
         {
-            resources_amounts[(int)Resources.GOLD] -= gold;
-            resources_amounts[(int)Resources.COAL] -= coal;
-            resources_amounts[(int)Resources.STONE] -= stone;
-            resources_amounts[(int)Resources.IRON] -= iron;
+            AddResource(Resources.GOLD, -gold);
+            AddResource(Resources.COAL, -coal);
+            AddResource(Resources.STONE, -stone);
+            AddResource(Resources.IRON, -iron);
 
             return true;
         }

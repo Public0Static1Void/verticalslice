@@ -132,6 +132,7 @@ public class Builder : MonoBehaviour
             text.text = ob.name;
             text.font = textFont;
             text.fontSize = 32;
+            text.horizontalOverflow = HorizontalWrapMode.Overflow;
 
             RectTransform rect = ob.GetComponent<RectTransform>();
             rect.anchoredPosition = parent.GetComponent<RectTransform>().anchoredPosition;
@@ -140,16 +141,22 @@ public class Builder : MonoBehaviour
 
             UnityEngine.UI.Button bt = ob.AddComponent<UnityEngine.UI.Button>();
             int aux = i;
-            bt.onClick.AddListener(() => CreateBuilding((BuildingManager.Buildings)aux)); // Añade el evento que saldrá al pulsar el botón
+            bt.onClick.AddListener(() =>
+            {
+                Debug.Log("Click");
+                CreateBuilding((BuildingManager.Buildings)aux);
+            }); // Añade el evento que saldrá al pulsar el botón
             
             EventTrigger trig = ob.AddComponent<EventTrigger>();
             EventTrigger.Entry entry = new EventTrigger.Entry();
             entry.eventID = EventTriggerType.PointerEnter;
-            entry.callback.AddListener((eventData) => ChangeBuildingCostPanel(buildings[aux].GetComponent<BuildingLife>()));
+            entry.callback.AddListener((eventData) => {
+                ChangeBuildingCostPanel(buildings[aux].GetComponent<BuildingLife>());
+                });
             trig.triggers.Add(entry);
-            entry.eventID = EventTriggerType.PointerExit;
-            entry.callback.AddListener((ventData) => OnPointerExit());
-            trig.triggers.Add(entry);
+            /*entry.eventID = EventTriggerType.PointerExit;
+            entry.callback.AddListener((eventData) => OnPointerExit());
+            trig.triggers.Add(entry);*/
 
             Navigation nav = new Navigation();
             nav.mode = Navigation.Mode.None;
@@ -157,12 +164,11 @@ public class Builder : MonoBehaviour
         }
     }
 
-    void ChangeBuildingCostPanel(BuildingLife bl)
+    public void ChangeBuildingCostPanel(BuildingLife bl)
     {
         iron_cost.text = "" + bl.iron_cost;
         coal_cost.text = "" + bl.coal_cost;
         gold_cost.text = "" + bl.gold_cost;
-        Debug.Log("aAAA");
     }
     void OnPointerExit()
     {
@@ -171,8 +177,9 @@ public class Builder : MonoBehaviour
         gold_cost.text = "0";
     }
 
-    void CreateBuilding(BuildingManager.Buildings build)
+    public void CreateBuilding(BuildingManager.Buildings build)
     {
+        Debug.Log(build);
         if (curr_build_ob != null)
         {
             CancelBuilding();

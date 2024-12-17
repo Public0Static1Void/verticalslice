@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -43,6 +44,8 @@ public class GameManager : MonoBehaviour
         else
             Destroy(this.gameObject);
 
+        if (pause_menu == null) return;
+
         pause_original_rect = pause_menu.GetComponent<RectTransform>();
 
         pause_original_position = pause_original_rect.position;
@@ -52,12 +55,17 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        if (pause_menu == null) return;
+
         background = pause_menu.transform.parent.GetComponent<Image>();
+        background.gameObject.SetActive(false);
         camera_m = Camera.main.GetComponent<CameraMovement>();
     }
 
     void Update()
     {
+        if (pause_menu == null) return;
+
         // Animación del menú
         if (pause)
         {
@@ -123,10 +131,12 @@ public class GameManager : MonoBehaviour
             pause = !pause;
             if (pause)
             {
+                background.gameObject.SetActive(true);
                 Cursor.lockState = CursorLockMode.None;
             }
             else
             {
+                background.gameObject.SetActive(false);
                 Cursor.lockState = CursorLockMode.Locked;
                 Time.timeScale = 1;
                 CloseSettings();
@@ -139,6 +149,7 @@ public class GameManager : MonoBehaviour
         open_settings = !open_settings;
         settings_menu.SetActive(open_settings);
         mouse_slider_text.text = camera_m.cameraSpeed.ToString("0.0");
+        mouse_slider.value = camera_m.cameraSpeed;
         volume_slider_text.text = volume_slider.value.ToString("0.0");
     }
     public void CloseSettings()
@@ -157,6 +168,11 @@ public class GameManager : MonoBehaviour
     {
         audio_source.volume = volume_slider.value;
         volume_slider_text.text = volume_slider.value.ToString("0.0");
+    }
+
+    public void LoadScene(string scene)
+    {
+        SceneManager.LoadScene(scene);
     }
 
     public void QuitGame()
