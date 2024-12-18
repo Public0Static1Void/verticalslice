@@ -11,6 +11,7 @@ public class EnemyMovement : MonoBehaviour
 
     private NavMeshAgent nav;
     [SerializeField] private GameObject current_target;
+    [SerializeField] private LayerMask buildingLayer;
 
     public bool onAttackRange;
     Rigidbody rb;
@@ -22,7 +23,10 @@ public class EnemyMovement : MonoBehaviour
 
     private void Update()
     {
-        MoveToCore();
+        if (!MoveToCore())
+        {
+            
+        }
         if (rb.velocity.magnitude > 0.05f)
         {
             rb.velocity *= 0.99f;
@@ -34,9 +38,44 @@ public class EnemyMovement : MonoBehaviour
         nav.SetDestination(target.transform.position);
     }
 
-    private void MoveToCore()
+    private void MoveToNearestBuilding()
     {
-        if (Core.instance == null) return;
+        if (!nav.hasPath)
+        {
+            Collider[] colls = Physics.OverlapSphere(transform.position, 5000, buildingLayer);
+            if (colls.Length > 0)
+            {
+                float dist = Vector3.Distance(transform.position, colls[0].transform.position);
+                GameObject nearest = colls[0].gameObject;
+                for (int i = 0; i < colls.Length; i++)
+                {
+                    if (Vector3.Distance(transform.position, colls[i].transform.position) > dist)
+                    {
+                        dist = Vector3.Distance(transform.position, colls[i].transform.position);
+                        nearest = colls[i].gameObject;
+                    }
+                }
+
+                SetDestiny(nearest);
+            }
+        }
+
+        if (current_target != null && Vector3.Distance(transform.position, current_target.transform.position) > stop_range)
+        {
+            SetDestiny(current_target);
+            onAttackRange = false;
+            nav.isStopped = false;
+        }
+        else if (current_target != null)
+        {
+            nav.isStopped = true;
+            onAttackRange = true;
+            transform.LookAt(current_target.transform.position);
+        }
+    }
+    private bool MoveToCore()
+    {
+        if (Core.instance == null) return false;
         
         if (!nav.hasPath)
         {
@@ -65,6 +104,8 @@ public class EnemyMovement : MonoBehaviour
             onAttackRange = true;
             transform.LookAt(current_target.transform.position);
         }
+
+        return true;
     }
 
     private void OnDrawGizmosSelected()

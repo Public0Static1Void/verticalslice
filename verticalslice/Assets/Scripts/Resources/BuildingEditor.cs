@@ -37,7 +37,7 @@ public class BuildingEditor : MonoBehaviour
             }
             else
             {
-                GameManager.gm.ShowText("Edit mode ON", 1);
+                GameManager.gm.ShowText("Edit mode ON", 0);
             }
         }
     }
@@ -109,6 +109,10 @@ public class BuildingEditor : MonoBehaviour
                                     m_conv.CreateLineOfConection(new Vector3[2] { m_conv.transform.position, selected_building.transform.position });
                                     m_conv.can_deposite = true;
                                 }
+                                else if (selected_bl.building_type == BuildingManager.Buildings.FURNACE)
+                                {
+                                    selected_bl.GetComponent<Furnace>().Start_Furnace();
+                                }
                                 break;
                             case BuildingManager.Buildings.CORE:
                                 hit.collider.GetComponent<Core>().CheckSurroundings();
@@ -133,6 +137,9 @@ public class BuildingEditor : MonoBehaviour
                                         conv.nearest_drill = null;
                                     }
                                 }
+                                break;
+                            case BuildingManager.Buildings.FURNACE:
+                                bl.GetComponent<Furnace>().Start_Furnace();
                                 break;
                         }
                         selected_building = null;

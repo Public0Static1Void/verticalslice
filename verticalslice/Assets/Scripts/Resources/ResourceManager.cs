@@ -21,17 +21,19 @@ public class ResourceManager : MonoBehaviour
         resources = new List<Resource>();
 
         List<ArrayList> resources_from_db = Database.SendQuery("SELECT * FROM Resources");
-
         for (int i = 0; i <  resources_from_db.Count; i++)
         {
-            Resource res = new Resource();
+            Resource res = this.AddComponent<Resource>();
 
             res.id = int.Parse("" + resources_from_db[i][0]);
             Debug.Log(resources_from_db[i][1].ToString());
             res.r_name = resources_from_db[i][1].ToString();
             res.r_model = UnityEngine.Resources.Load<GameObject>(string.Format("Models/Minerals/{0} {1}", "Ore", res.r_name));
+
             res.resource_type = (Resources)i;
             resources.Add(res);
+
+            Destroy(res);
         }
 
         resources_amounts = new List<int>();
