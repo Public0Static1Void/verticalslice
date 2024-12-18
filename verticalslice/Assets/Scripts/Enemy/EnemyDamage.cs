@@ -39,9 +39,9 @@ public class EnemyDamage : MonoBehaviour
 
     public void Attack()
     {
-        if (Physics.SphereCast(transform.position, transform.localScale.x, transform.forward, out RaycastHit hit, em.stop_range))
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, em.stop_range))
         {
-            if (hit.transform.tag == buildings_tag)
+            if (hit.transform.tag == buildings_tag || hit.transform.tag == "Player")
             {
                 hit.transform.GetComponent<BuildingLife>().ChangeLife(-attack_damage);
             }

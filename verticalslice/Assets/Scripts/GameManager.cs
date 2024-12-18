@@ -175,6 +175,14 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(scene);
     }
 
+    public void AddAllResources()
+    {
+        ResourceManager.instance.AddResource(ResourceManager.Resources.GOLD, 1000);
+        ResourceManager.instance.AddResource(ResourceManager.Resources.IRON, 1000);
+        ResourceManager.instance.AddResource(ResourceManager.Resources.STONE, 1000);
+        ResourceManager.instance.AddResource(ResourceManager.Resources.COAL, 1000);
+    }
+
     public void QuitGame()
     {
         Application.Quit();

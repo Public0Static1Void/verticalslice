@@ -25,11 +25,20 @@ public class EnemyMovement : MonoBehaviour
     {
         if (!MoveToCore())
         {
-            
+            MoveToNearestBuilding();
         }
         if (rb.velocity.magnitude > 0.05f)
         {
             rb.velocity *= 0.99f;
+        }
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit))
+        {
+            if (hit.distance < stop_range)
+                nav.isStopped = true;
+        }
+        else
+        {
+            nav.isStopped = false;
         }
     }
 
@@ -42,20 +51,29 @@ public class EnemyMovement : MonoBehaviour
     {
         if (!nav.hasPath)
         {
-            Collider[] colls = Physics.OverlapSphere(transform.position, 5000, buildingLayer);
-            if (colls.Length > 0)
+            Collider[] colls = Physics.OverlapSphere(transform.position, 5000);
+            List<Collider> correct_colls = new List<Collider>();
+            for (int i = 0; i < colls.Length; i++)
             {
-                float dist = Vector3.Distance(transform.position, colls[0].transform.position);
-                GameObject nearest = colls[0].gameObject;
-                for (int i = 0; i < colls.Length; i++)
+                if (colls[i].tag == "Building" || colls[i].tag == "Player")
                 {
-                    if (Vector3.Distance(transform.position, colls[i].transform.position) > dist)
+                    correct_colls.Add(colls[i]);
+                }
+            }
+            if (correct_colls.Count > 0)
+            {
+                float dist = Vector3.Distance(transform.position, correct_colls[0].transform.position);
+                GameObject nearest = correct_colls[0].gameObject;
+                for (int i = 0; i < correct_colls.Count; i++)
+                {
+                    if (Vector3.Distance(transform.position, correct_colls[i].transform.position) > dist)
                     {
-                        dist = Vector3.Distance(transform.position, colls[i].transform.position);
-                        nearest = colls[i].gameObject;
+                        dist = Vector3.Distance(transform.position, correct_colls[i].transform.position);
+                        nearest = correct_colls[i].gameObject;
                     }
                 }
 
+                current_target = nearest;
                 SetDestiny(nearest);
             }
         }

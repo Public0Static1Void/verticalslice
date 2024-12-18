@@ -129,4 +129,9 @@ public class PlayerMovement : MonoBehaviour
             is_sprinting = false;
         }
     }
+
+    private void OnDestroy()
+    {
+        GameManager.gm.LoadScene("SampleScene");
+    }
 }
