@@ -136,7 +136,7 @@ public class Conveyor : MonoBehaviour
                 }
             }
         }
-        else if (conveyor_stored > 0 && nearest_conveyor == null && connected_to_conveyor)
+        else if (conveyor_stored > 0 && nearest_conveyor == null && connected_to_conveyor && Core.instance != null)
         {
             Deposite(1);
         }
@@ -146,8 +146,11 @@ public class Conveyor : MonoBehaviour
     {
         for (int i = 0; i < resources_in_conveyor.Count && i < amount; i++)
         {
-            conveyor_stored --;
-            ResourceManager.instance.AddResource(resources_in_conveyor[i].GetComponent<Resource>().resource_type, 1);
+            conveyor_stored--;
+            int amount_to_sum = 1;
+            if (resources_in_conveyor[i].name.Contains("Processed"))
+                amount_to_sum *= 5;
+            ResourceManager.instance.AddResource(resources_in_conveyor[i].GetComponent<Resource>().resource_type, amount_to_sum);
             Destroy(resources_in_conveyor[i]);
             resources_in_conveyor.Remove(resources_in_conveyor[i]);
         }
@@ -196,7 +199,7 @@ public class Conveyor : MonoBehaviour
     {
         if (nearest_conveyor == null || resources_in_conveyor.Count <= 0) return;
 
-        Vector3 point = (nearest_conveyor.transform.position + offset) - resources_in_conveyor[resources_in_conveyor.Count - 1].transform.position;
+        Vector3 point = (nearest_conveyor.transform.position + nearest_conveyor.offset) - resources_in_conveyor[resources_in_conveyor.Count - 1].transform.position;
         dir = point.normalized;
         Quaternion rot = Quaternion.LookRotation(dir, transform.up);
         resources_in_conveyor[resources_in_conveyor.Count - 1].transform.rotation = rot;

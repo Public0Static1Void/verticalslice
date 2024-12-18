@@ -30,11 +30,16 @@ public class Builder : MonoBehaviour
     [SerializeField] private float distance_from_player, min_distance_from_player = 1;
     public float max_distance_from_player, max_offset_from_ground;
 
+    [Header("Right click")]
+    public Image right_click;
+    public Image hold_right_click;
+    public Image sliced_right_click;
     public bool relocate = false;
     public bool right_click_pressed = false;
     private float delta = 0;
     public enum DistanceMode { UP, FORWARD, LAST_NO_USE }
     public DistanceMode distance_mode = DistanceMode.FORWARD;
+    private bool changed = false;
 
     private List<BuildingLife> buildings_life = new List<BuildingLife>();
 
@@ -69,15 +74,27 @@ public class Builder : MonoBehaviour
         {
             // Si el jugador mantiene el click derecho por + de 1 segundo, cancelará la construcción, sino cambiará el modo de distancia
             delta += Time.deltaTime;
+            if (delta > 0.25f)
+            {
+                sliced_right_click.fillAmount = delta * 1.25f;
+            }
             if (delta > 1)
             {
                 CancelBuilding();
             }
-            else
+            else if (!changed)
             {
                 distance_mode = (DistanceMode)((int)distance_mode + 1);
                 if (distance_mode == DistanceMode.LAST_NO_USE)
+                {
                     distance_mode = DistanceMode.UP;
+                    GameManager.gm.ShowText("Distance mode: UP", 5);
+                }
+                else
+                {
+                    GameManager.gm.ShowText("Distance mode: FORWARD", 5);
+                }
+                changed = true;
             }
         }
     }
@@ -199,15 +216,24 @@ public class Builder : MonoBehaviour
         curr_build_ob.GetComponent<MeshRenderer>().SetMaterials(new List<Material> { holographic_material });
         curr_build = build;
 
-        curr_build_ob.GetComponent<Collider>().enabled = false;
+        Collider[] colls = curr_build_ob.GetComponents<Collider>();
+        foreach (Collider coll in colls)
+        {
+            coll.enabled = false;
+        }
         if (build == BuildingManager.Buildings.WALL)
         {
             curr_build_ob.GetComponent<NavMeshObstacle>().carving = false;
         }
 
-        min_distance_from_player = curr_build_ob.transform.localScale.z / 2 + 0.5f;
+        min_distance_from_player = curr_build_ob.transform.localScale.z / 2 + 1;
 
         building_rot = 0;
+
+        if (!buildings_life[(int)curr_build].canRotate)
+            right_click.gameObject.SetActive(true);
+        hold_right_click.gameObject.SetActive(true);
+        sliced_right_click.gameObject.SetActive(true);
 
         relocate = true;
     }
@@ -247,7 +273,11 @@ public class Builder : MonoBehaviour
             }
 
             curr_build_ob.GetComponent<MeshRenderer>().materials = object_original_materials;
-            curr_build_ob.GetComponent<Collider>().enabled = true;
+            Collider[] colls = curr_build_ob.GetComponents<Collider>();
+            foreach (Collider coll in colls)
+            {
+                coll.enabled = true;
+            }
             curr_build_ob = null;
             curr_build = BuildingManager.Buildings.LAST_NO_USE;
         }
@@ -256,6 +286,10 @@ public class Builder : MonoBehaviour
     void CancelBuilding()
     {
         Destroy(curr_build_ob);
+        sliced_right_click.fillAmount = 0;
+        right_click.gameObject.SetActive(false);
+        hold_right_click.gameObject.SetActive(false);
+        sliced_right_click.gameObject.SetActive(false);
         relocate = false;
         curr_build_ob = null;
         curr_build = BuildingManager.Buildings.LAST_NO_USE;
@@ -302,7 +336,9 @@ public class Builder : MonoBehaviour
         if (con.canceled)
         {
             delta = 0;
+            sliced_right_click.fillAmount = 0;
             right_click_pressed = false;
+            changed = false;
         }
     }
 }

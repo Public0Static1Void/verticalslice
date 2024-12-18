@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 7867002485799700833}
   - component: {fileID: 2979999920486243974}
   - component: {fileID: 1713439816466296887}
+  - component: {fileID: -8168972893638045292}
   m_Layer: 0
-  m_Name: Processed gold
-  m_TagString: Untagged
+  m_Name: Processed Gold
+  m_TagString: Mineral
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,3 +84,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &-8168972893638045292
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8225772581659138804}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.43547362, y: 0.2524902, z: 0.16263574}
+  m_Center: {x: 0, y: 0, z: 0.0761963}

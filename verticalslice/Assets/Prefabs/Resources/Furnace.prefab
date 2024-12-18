@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6507272301713031279
+--- !u!1 &6357254847256748134
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,49 +8,50 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8280157442608340491}
-  - component: {fileID: 4850528477389763214}
-  - component: {fileID: 5319587050551422283}
-  - component: {fileID: -4653649350492759285}
-  - component: {fileID: 9016057131545353813}
-  - component: {fileID: -302980010993242547}
-  m_Layer: 0
-  m_Name: Ore gold
-  m_TagString: Mineral
+  - component: {fileID: 5025600759095560042}
+  - component: {fileID: 7562234406952858632}
+  - component: {fileID: 6885001089528157391}
+  - component: {fileID: 4623214311492604370}
+  - component: {fileID: 6463977291711981644}
+  - component: {fileID: -5619931638741079425}
+  - component: {fileID: -660013251372149369}
+  m_Layer: 7
+  m_Name: Furnace
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8280157442608340491
+--- !u!4 &5025600759095560042
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6507272301713031279}
+  m_GameObject: {fileID: 6357254847256748134}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -10.048902, y: -1.681, z: -15.118225}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.41, y: 0, z: -15.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &4850528477389763214
+--- !u!33 &7562234406952858632
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6507272301713031279}
-  m_Mesh: {fileID: -6127173099042081262, guid: 291e4bdfd2423e644be12192f20d9d3c, type: 3}
---- !u!23 &5319587050551422283
+  m_GameObject: {fileID: 6357254847256748134}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &6885001089528157391
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6507272301713031279}
+  m_GameObject: {fileID: 6357254847256748134}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -64,8 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1236883465255874938, guid: 291e4bdfd2423e644be12192f20d9d3c, type: 3}
-  - {fileID: -569752066712626562, guid: 291e4bdfd2423e644be12192f20d9d3c, type: 3}
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -87,56 +87,52 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &-4653649350492759285
-Rigidbody:
+--- !u!65 &4623214311492604370
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6507272301713031279}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_GameObject: {fileID: 6357254847256748134}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &9016057131545353813
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6463977291711981644
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6507272301713031279}
+  m_GameObject: {fileID: 6357254847256748134}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3330fc812ba8a0140b9324593ce42ee7, type: 3}
+  m_Script: {fileID: 11500000, guid: 885a1884b720a164489a0e46cbdc0200, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  r_name: Gold
-  id: 3
-  r_model: {fileID: 0}
-  resource_type: 1
---- !u!65 &-302980010993242547
+  current_resource: {fileID: 0}
+  conv_mask:
+    serializedVersion: 2
+    m_Bits: 128
+  range: 15
+  connected_conv: {fileID: 0}
+--- !u!65 &-5619931638741079425
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6507272301713031279}
+  m_GameObject: {fileID: 6357254847256748134}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -149,5 +145,24 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.5502783, y: 0.61788565, z: 0.20791303}
-  m_Center: {x: 0.008684069, y: -0.007257088, z: 0.05582808}
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-660013251372149369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6357254847256748134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c6bdd3b03b0e7743b8f9e0e93b3f1d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  life: 20
+  canRotate: 0
+  building_type: 5
+  gold_cost: 0
+  iron_cost: 50
+  stone_cost: 50
+  coal_cost: 25
