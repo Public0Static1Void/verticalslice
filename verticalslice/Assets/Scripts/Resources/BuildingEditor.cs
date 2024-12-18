@@ -12,9 +12,10 @@ public class BuildingEditor : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private GameObject selected_building;
-    [SerializeField] private TMP_Text selected_building_text;
     [SerializeField] private Material line_material;
     [SerializeField] private Material outline_material;
+    [SerializeField] private UnityEngine.UI.Image sliced_right_click;
+    [SerializeField] private UnityEngine.UI.Image right_click_img;
 
     private bool right_click_pressed = false;
     private float delta = 0;
@@ -47,12 +48,15 @@ public class BuildingEditor : MonoBehaviour
         canEdit = false;
         
         selected_building = null;
-        selected_building_text.text = "";
         delta = 0;
         right_click_pressed = false;
 
         if (line_r != null)
             line_r.enabled = false;
+
+        sliced_right_click.fillAmount = 0;
+        right_click_img.gameObject.SetActive(false);
+        sliced_right_click.gameObject.SetActive(false);
 
         trackedObjectMaterials.Clear();
     }
@@ -70,7 +74,6 @@ public class BuildingEditor : MonoBehaviour
                     if (selected_building == null)
                     {
                         selected_building = hit.collider.gameObject;
-                        selected_building_text.text = "Selected building: " + hit.collider.name;
                         GameManager.gm.ShowText("Selected building: " + hit.collider.name, 0);
 
                         SetLineBetweenConveyors(selected_building.transform.position, hit.collider.GetComponent<Conveyor>());
@@ -135,6 +138,8 @@ public class BuildingEditor : MonoBehaviour
                         selected_building = null;
 
                     }
+                    right_click_img.gameObject.SetActive(true);
+                    sliced_right_click.gameObject.SetActive(true);
                 }
             }
         }
@@ -186,7 +191,8 @@ public class BuildingEditor : MonoBehaviour
         if (right_click_pressed)
         {
             delta += Time.deltaTime;
-            if (delta > 0.75f)
+            sliced_right_click.fillAmount = delta * 1.25f;
+            if (delta > 0.75)
             {
                 Destroy(selected_building);
                 DeselectBuilding();

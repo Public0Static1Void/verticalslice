@@ -187,7 +187,7 @@ public class Builder : MonoBehaviour
         coal_cost.text = "" + bl.coal_cost;
         gold_cost.text = "" + bl.gold_cost;
     }
-    void OnPointerExit()
+    void ClearCostTexts()
     {
         iron_cost.text = "0";
         coal_cost.text = "0";
@@ -270,6 +270,9 @@ public class Builder : MonoBehaviour
                 case BuildingManager.Buildings.TURRET:
                     curr_build_ob.GetComponent<Turret>().Start_Turret();
                     break;
+                case BuildingManager.Buildings.FURNACE:
+                    curr_build_ob.GetComponent<Furnace>().Start_Furnace();
+                    break;
             }
 
             curr_build_ob.GetComponent<MeshRenderer>().materials = object_original_materials;
@@ -280,6 +283,10 @@ public class Builder : MonoBehaviour
             }
             curr_build_ob = null;
             curr_build = BuildingManager.Buildings.LAST_NO_USE;
+
+            right_click.gameObject.SetActive(false);
+            hold_right_click.gameObject.SetActive(false);
+            sliced_right_click.gameObject.SetActive(false);
         }
     }
 
@@ -295,6 +302,8 @@ public class Builder : MonoBehaviour
         curr_build = BuildingManager.Buildings.LAST_NO_USE;
         right_click_pressed = false;
         delta = 0;
+
+        ClearCostTexts();
     }
 
     public void ChangeLength(InputAction.CallbackContext con)

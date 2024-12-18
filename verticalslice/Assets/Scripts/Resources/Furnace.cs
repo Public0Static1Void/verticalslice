@@ -9,10 +9,14 @@ public class Furnace : MonoBehaviour
     [SerializeField] private LayerMask conv_mask;
     [SerializeField] private float range;
 
+    [SerializeField] private int fuel;
+
     private Conveyor conv;
 
     public Conveyor connected_conv;
-    void Start()
+
+    private Resource saved_res;
+    public void Start_Furnace()
     {
         Collider[] colls = Physics.OverlapSphere(transform.position, range, conv_mask);
         if (colls.Length > 0)
@@ -57,14 +61,40 @@ public class Furnace : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Mineral") && conv.conveyor_stored < conv.conveyor_max_stored)
+        if (other.CompareTag("Mineral"))
         {
-            GameObject processed_ore = Instantiate(UpgradeMineral(other.GetComponent<Resource>()), transform.position + transform.up * transform.localScale.y, Quaternion.identity);
-            conv.resources_in_conveyor.Add(processed_ore);
-            conv.conveyor_stored++;
-            connected_conv.resources_in_conveyor.Remove(other.gameObject);
-            connected_conv.conveyor_stored--;
-            Destroy(other.gameObject);
+            if (other.GetComponent<Resource>().resource_type == ResourceManager.Resources.COAL)
+            {
+                fuel++;
+                connected_conv.resources_in_conveyor.Remove(other.gameObject);
+                if (connected_conv.conveyor_stored > 0)
+                    connected_conv.conveyor_stored--;
+                Destroy(other.gameObject);
+                return;
+            }
+
+            if (conv.conveyor_stored < conv.conveyor_max_stored && fuel > 0)
+            {
+                saved_res = other.GetComponent<Resource>();
+                GameObject processed_ore = Instantiate(UpgradeMineral(other.GetComponent<Resource>()), transform.position + transform.up * transform.localScale.y, Quaternion.identity);
+
+                Resource res = processed_ore.AddComponent<Resource>();
+                res.id = saved_res.id;
+                res.r_name = saved_res.r_name;
+                res.resource_type = saved_res.resource_type;
+                res.r_model = processed_ore;
+
+                processed_ore.GetComponent<Rigidbody>().useGravity = false;
+                conv.resources_in_conveyor.Add(processed_ore);
+                conv.conveyor_stored++;
+
+                connected_conv.resources_in_conveyor.Remove(other.gameObject);
+                connected_conv.conveyor_stored--;
+
+                fuel--; // Resta combustible
+
+                Destroy(other.gameObject);
+            }
         }
     }
 }

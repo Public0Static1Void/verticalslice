@@ -40,6 +40,15 @@ public class Conveyor : MonoBehaviour
         Collider[] colls = Physics.OverlapSphere(transform.position, conveyor_range, drill_layer);
         
         if (colls.Length > 0 && colls[0].transform.TryGetComponent<Drill>(out Drill dr)){
+            float dist = Vector3.Distance(transform.position, colls[0].transform.position);
+            for (int i = 0; i < colls.Length; i++)
+            {
+                if (Vector3.Distance(transform.position, colls[i].transform.position) < dist)
+                {
+                    dist = Vector3.Distance(transform.position, colls[i].transform.position);
+                    dr = colls[i].GetComponent<Drill>();
+                }
+            }
             ConnectToToDrill(dr);
         }
         if (nearest_drill == null)
@@ -150,7 +159,15 @@ public class Conveyor : MonoBehaviour
             int amount_to_sum = 1;
             if (resources_in_conveyor[i].name.Contains("Processed"))
                 amount_to_sum *= 5;
-            ResourceManager.instance.AddResource(resources_in_conveyor[i].GetComponent<Resource>().resource_type, amount_to_sum);
+            Resource resource_to_add = resources_in_conveyor[i].GetComponent<Resource>();
+            if (resource_to_add == null)
+            {
+                GameObject ob = resources_in_conveyor[i];
+                resources_in_conveyor.RemoveAt(i);
+                Destroy(ob);
+                return;
+            }
+            ResourceManager.instance.AddResource(resource_to_add.resource_type, amount_to_sum);
             Destroy(resources_in_conveyor[i]);
             resources_in_conveyor.Remove(resources_in_conveyor[i]);
         }
