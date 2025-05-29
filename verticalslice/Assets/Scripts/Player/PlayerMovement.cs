@@ -99,9 +99,8 @@ public class PlayerMovement : MonoBehaviour
                 current_speed = speed;
             }
 
-            Vector3 dir = new Vector3(((transform.forward.x * input.y) + (transform.right.x * input.x)) * current_speed * Time.deltaTime, rb.velocity.y,
-                                        ((transform.forward.z * input.y) + (transform.right.z * input.x)) * current_speed * Time.deltaTime);
-            rb.velocity = dir;
+            Vector3 dir = ((transform.forward * input.y) + (transform.right * input.x)) * current_speed * Time.deltaTime;
+            rb.velocity = new Vector3(dir.x, rb.velocity.y, dir.z);
         }
         else if (rb.velocity.magnitude > 0.3f)
         {

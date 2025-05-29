@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 0;
             }
             pause_original_rect.position = new Vector2(pause_original_rect.position.x + 10000 * Time.deltaTime, pause_original_rect.position.y);
-            if (background.color.a < 1)
+            if (background.color.a < 0.5f)
             {
                 Color col = background.color;
                 pause_alpha += Time.deltaTime * 5;
@@ -133,11 +133,13 @@ public class GameManager : MonoBehaviour
             {
                 background.gameObject.SetActive(true);
                 Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
             }
             else
             {
                 background.gameObject.SetActive(false);
                 Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
                 Time.timeScale = 1;
                 CloseSettings();
             }

@@ -51,15 +51,16 @@ public class Conveyor : MonoBehaviour
             }
             ConnectToToDrill(dr);
         }
-        if (nearest_drill == null)
+        if (nearest_drill == null) // No hay un taladro cerca
         {
             can_extract = false;
             Debug.Log("Couldn't find a drill or it already has a connection");
+            
+            // Busca el conveyor más cercano
             Collider[] colliders = Physics.OverlapSphere(transform.position, conveyor_range, conveyor_layer);
             float dist = 0;
             if (colliders.Length > 0)
             {
-                
                 dist = Vector3.Distance(transform.position, colliders[0].transform.position);
                 nearest_conveyor = colliders[0].transform.GetComponent<Conveyor>();
 
@@ -77,7 +78,8 @@ public class Conveyor : MonoBehaviour
                 if (nearest_conveyor.conveyor_stored > 0)
                     nearest_conveyor.OrientateMineral();
 
-                CreateLineOfConection(new Vector3[2] { transform.position, nearest_conveyor.transform.position });
+                nearest_conveyor = null;
+                //CreateLineOfConection(new Vector3[2] { transform.position, nearest_conveyor.transform.position });
             }
         }
     }

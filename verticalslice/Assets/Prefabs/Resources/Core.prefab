@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4538143609096008967}
   - component: {fileID: 354491137239750167}
   - component: {fileID: -7801401519618737686}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Core
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -122,6 +122,10 @@ MonoBehaviour:
   life: 100
   canRotate: 1
   building_type: 2
+  gold_cost: 100
+  iron_cost: 100
+  stone_cost: 75
+  coal_cost: 50
 --- !u!114 &-7801401519618737686
 MonoBehaviour:
   m_ObjectHideFlags: 0

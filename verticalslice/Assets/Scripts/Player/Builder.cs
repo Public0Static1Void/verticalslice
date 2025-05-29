@@ -18,10 +18,16 @@ public class Builder : MonoBehaviour
     [SerializeField] private Font textFont;
 
     public Material holographic_material;
+    public Material line_material, line_connected_material;
     private Material[] object_original_materials;
 
     public BuildingManager.Buildings curr_build = BuildingManager.Buildings.LAST_NO_USE;
     GameObject curr_build_ob;
+
+    public LayerMask layer_conveyor;
+    public LayerMask layer_drill;
+    public LayerMask layer_core;
+
     
 
     [Header("Stats")]
@@ -115,6 +121,8 @@ public class Builder : MonoBehaviour
             curr_build_ob.transform.position = new Vector3(
                 transform.position.x + Camera.main.transform.forward.x * distance_from_player, 
                 curr_build_ob.transform.position.y, transform.position.z + Camera.main.transform.forward.z * distance_from_player);
+
+            CheckNearestConnection();
         }
     }
 
@@ -215,6 +223,8 @@ public class Builder : MonoBehaviour
         curr_build_ob.GetComponent<MeshRenderer>().SetMaterials(new List<Material> { holographic_material });
         curr_build = build;
 
+        curr_build_ob.AddComponent<LineRenderer>();
+
         Collider[] colls = curr_build_ob.GetComponents<Collider>();
         foreach (Collider coll in colls)
         {
@@ -236,6 +246,73 @@ public class Builder : MonoBehaviour
 
         relocate = true;
     }
+
+    private void CheckNearestConnection()
+    {
+        GameObject nearest = null;
+        float dist = 100;
+        switch (curr_build)
+        {
+            case BuildingManager.Buildings.CONVEYOR:
+                nearest = AssignNearest(dist, nearest, layer_conveyor);
+                nearest = AssignNearest(dist, nearest, layer_drill);
+                nearest = AssignNearest(dist, nearest, layer_core);
+                break;
+            case BuildingManager.Buildings.DRILL:
+                nearest = AssignNearest(dist, nearest, layer_conveyor);
+                break;
+            case BuildingManager.Buildings.CORE:
+                nearest = AssignNearest(dist, nearest, layer_conveyor);
+                break;
+        }
+
+        // Crea la línea de donde se conectará el edificio
+        if (nearest != null)
+            CreateLineOfConection(curr_build_ob, nearest.transform.position);
+        else
+        {
+            curr_build_ob.GetComponent<LineRenderer>().enabled = false;
+        }
+    }
+
+    private GameObject AssignNearest(float dist, GameObject nearest, LayerMask layer)
+    {
+        Collider[] colls_drill = Physics.OverlapSphere(curr_build_ob.transform.position, 8.5f, layer);
+        if (colls_drill.Length > 0)
+        {
+            dist = Vector3.Distance(curr_build_ob.transform.position, colls_drill[0].transform.position);
+            nearest = colls_drill[0].gameObject;
+            for (int i = 0; i < colls_drill.Length; i++)
+            {
+                if (Vector3.Distance(curr_build_ob.transform.position, colls_drill[i].transform.position) < dist)
+                {
+                    nearest = colls_drill[i].gameObject;
+                    dist = Vector3.Distance(curr_build_ob.transform.position, colls_drill[i].transform.position);
+                }
+            }
+        }
+
+        return nearest;
+    }
+
+    public void CreateLineOfConection(GameObject building, Vector3 dest)
+    {
+        // Dibuja una línea entre las posiciones
+        LineRenderer lr = building.GetComponent<LineRenderer>();
+        lr.enabled = true;
+
+        Vector3[] pos = new Vector3[2];
+        pos[0] = building.transform.position;
+        pos[1] = dest;
+        lr.SetPositions(pos);
+        lr.startColor = Color.red;
+        lr.endColor = Color.green;
+
+        lr.material = line_material;
+        lr.startWidth = 0.013f;
+        lr.endWidth = 0.013f;
+    }
+
     public void PlaceBuilding(InputAction.CallbackContext con)
     {
         if (curr_build_ob == null || !ResourceManager.instance.CheckIfAffordable(curr_build)) return;
@@ -280,6 +357,9 @@ public class Builder : MonoBehaviour
             {
                 coll.enabled = true;
             }
+
+            curr_build_ob.GetComponent<LineRenderer>().material = line_connected_material;
+
             curr_build_ob = null;
             curr_build = BuildingManager.Buildings.LAST_NO_USE;
 
