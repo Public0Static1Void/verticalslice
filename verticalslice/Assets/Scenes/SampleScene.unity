@@ -1333,7 +1333,7 @@ MonoBehaviour:
   - {fileID: 1749024427838537846, guid: 0384394567ea96b4cae16409cf382501, type: 3}
   - {fileID: 5739981192844397164, guid: 7dd568ff2ad7ea5409ce6844579ee4ad, type: 3}
   - {fileID: 9078067799878695138, guid: adf1645dac047904ab011c5bd7dff233, type: 3}
-  - {fileID: 6357254847256748134, guid: 3a45bc1bdce3ed241a73fb231a3963ac, type: 3}
+  - {fileID: 4896915743151392791, guid: a312fc5a37185e344b3c7eddad2f25fe, type: 3}
 --- !u!4 &745241901
 Transform:
   m_ObjectHideFlags: 0
@@ -2772,6 +2772,14 @@ PrefabInstance:
       propertyPath: sliced_right_click
       value: 
       objectReference: {fileID: 1783288536}
+    - target: {fileID: 8196038527731469060, guid: 678d8ea7339540d469aaf9b90c48f231, type: 3}
+      propertyPath: buildings.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8196038527731469060, guid: 678d8ea7339540d469aaf9b90c48f231, type: 3}
+      propertyPath: buildings.Array.data[3]
+      value: 
+      objectReference: {fileID: 4896915743151392791, guid: a312fc5a37185e344b3c7eddad2f25fe, type: 3}
     - target: {fileID: 8501903189217253941, guid: 678d8ea7339540d469aaf9b90c48f231, type: 3}
       propertyPath: m_ActionEvents.Array.data[19].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

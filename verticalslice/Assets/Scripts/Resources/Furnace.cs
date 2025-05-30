@@ -13,16 +13,15 @@ public class Furnace : MonoBehaviour
 
     private Conveyor conv;
 
-    public Conveyor connected_conv;
-
     private Resource saved_res;
+    /*
     public void Start_Furnace()
     {
         Collider[] colls = Physics.OverlapSphere(transform.position, range, conv_mask);
         if (colls.Length > 0)
         {
             float dis = Vector3.Distance(transform.position, colls[0].transform.position);
-            connected_conv = colls[0].GetComponent<Conveyor>();
+            conv.nearest_conveyor = colls[0].GetComponent<Conveyor>();
 
             for (int i = 0; i < colls.Length; i++)
             {
@@ -31,7 +30,7 @@ public class Furnace : MonoBehaviour
                 float new_dis = Vector3.Distance(transform.position, colls[i].transform.position);
                 if (new_dis < dis)
                 {
-                    connected_conv = colls[i].GetComponent<Conveyor>();
+                    conv.nearest_conveyor = colls[i].GetComponent<Conveyor>();
                     dis = new_dis;
                 }
             }
@@ -41,14 +40,19 @@ public class Furnace : MonoBehaviour
             conv.conveyor_max_stored = 1;
             conv.resources_in_conveyor = new List<GameObject>();
             
-            if (connected_conv != null)
+            if (conv.nearest_conveyor != null)
             {
-                conv.conveyor_speed = connected_conv.conveyor_speed;
-                connected_conv.nearest_conveyor = conv;
+                conv.conveyor_speed = conv.nearest_conveyor.conveyor_speed;
+                conv.nearest_conveyor.nearest_conveyor = conv;
             }
         }
     }
+    */
 
+    private void Start()
+    {
+        conv = GetComponent<Conveyor>();
+    }
     GameObject UpgradeMineral(Resource res)
     {
         GameObject new_mineral = UnityEngine.Resources.Load<GameObject>(string.Format("Models/Minerals/{0} {1}", "Processed", res.r_name));
@@ -66,9 +70,9 @@ public class Furnace : MonoBehaviour
             if (other.GetComponent<Resource>().resource_type == ResourceManager.Resources.COAL)
             {
                 fuel++;
-                connected_conv.resources_in_conveyor.Remove(other.gameObject);
-                if (connected_conv.conveyor_stored > 0)
-                    connected_conv.conveyor_stored--;
+                conv.nearest_conveyor.resources_in_conveyor.Remove(other.gameObject);
+                if (conv.nearest_conveyor.conveyor_stored > 0)
+                    conv.nearest_conveyor.conveyor_stored--;
                 Destroy(other.gameObject);
                 return;
             }
@@ -87,9 +91,6 @@ public class Furnace : MonoBehaviour
                 processed_ore.GetComponent<Rigidbody>().useGravity = false;
                 conv.resources_in_conveyor.Add(processed_ore);
                 conv.conveyor_stored++;
-
-                connected_conv.resources_in_conveyor.Remove(other.gameObject);
-                connected_conv.conveyor_stored--;
 
                 fuel--; // Resta combustible
 

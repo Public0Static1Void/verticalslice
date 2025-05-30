@@ -129,21 +129,29 @@ public class Conveyor : MonoBehaviour
         {
             for (int i = 0; i < resources_in_conveyor.Count; i++)
             {
-                resources_in_conveyor[i].transform.Translate(dir * conveyor_speed * Time.deltaTime, Space.World);
-                OrientateMineral();
-
-                if (Vector3.Distance(resources_in_conveyor[i].transform.position, nearest_conveyor.transform.position + nearest_conveyor.offset) < 0.1f)
+                if (resources_in_conveyor[i] != null)
                 {
-                    if (nearest_conveyor.conveyor_stored < nearest_conveyor.conveyor_max_stored)
+                    resources_in_conveyor[i].transform.Translate(dir * conveyor_speed * Time.deltaTime, Space.World);
+                    OrientateMineral();
+
+                    if (Vector3.Distance(resources_in_conveyor[i].transform.position, nearest_conveyor.transform.position + nearest_conveyor.offset) < 0.1f)
                     {
-                        nearest_conveyor.conveyor_stored++;
-                        nearest_conveyor.resources_in_conveyor.Add(resources_in_conveyor[i]);
-                        nearest_conveyor.current_resource = resources_in_conveyor[i].GetComponent<Resource>();
-                        nearest_conveyor.OrientateMineral();
+                        if (nearest_conveyor.conveyor_stored < nearest_conveyor.conveyor_max_stored)
+                        {
+                            nearest_conveyor.conveyor_stored++;
+                            nearest_conveyor.resources_in_conveyor.Add(resources_in_conveyor[i]);
+                            nearest_conveyor.current_resource = resources_in_conveyor[i].GetComponent<Resource>();
+                            nearest_conveyor.OrientateMineral();
+                        }
+                        if (conveyor_stored > 0)
+                            conveyor_stored--;
+                        resources_in_conveyor.Remove(resources_in_conveyor[i]);
                     }
-                    if (conveyor_stored > 0)
-                        conveyor_stored--;
-                    resources_in_conveyor.Remove(resources_in_conveyor[i]);
+                }
+                else
+                {
+                    resources_in_conveyor.RemoveAt(i);
+                    conveyor_stored = resources_in_conveyor.Count;
                 }
             }
         }
@@ -216,7 +224,7 @@ public class Conveyor : MonoBehaviour
 
     public void OrientateMineral()
     {
-        if (nearest_conveyor == null || resources_in_conveyor.Count <= 0) return;
+        if (nearest_conveyor == null || resources_in_conveyor.Count <= 0 || resources_in_conveyor[resources_in_conveyor.Count - 1] == null) return;
 
         Vector3 point = (nearest_conveyor.transform.position + nearest_conveyor.offset) - resources_in_conveyor[resources_in_conveyor.Count - 1].transform.position;
         dir = point.normalized;

@@ -435,6 +435,7 @@ MonoBehaviour:
   edit_range: 5
   selected_building: {fileID: 0}
   line_material: {fileID: 2100000, guid: d911be0c7b7a9c044bbf27b81ee957c4, type: 2}
+  line_deselect_material: {fileID: 2100000, guid: bcca9100f3a63314db7c1f60ee47cae4, type: 2}
   outline_material: {fileID: 2100000, guid: 43bcf504e2d5a984986444343466dc9f, type: 2}
   sliced_right_click: {fileID: 0}
   right_click_img: {fileID: 0}

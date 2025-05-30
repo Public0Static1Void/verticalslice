@@ -254,15 +254,18 @@ public class Builder : MonoBehaviour
         switch (curr_build)
         {
             case BuildingManager.Buildings.CONVEYOR:
-                nearest = AssignNearest(dist, nearest, layer_conveyor);
-                nearest = AssignNearest(dist, nearest, layer_drill);
-                nearest = AssignNearest(dist, nearest, layer_core);
+                AssignNearest(ref dist, ref nearest, layer_conveyor);
+                AssignNearest(ref dist, ref nearest, layer_drill);
+                AssignNearest(ref dist, ref nearest, layer_core);
                 break;
             case BuildingManager.Buildings.DRILL:
-                nearest = AssignNearest(dist, nearest, layer_conveyor);
+                AssignNearest(ref dist, ref nearest, layer_conveyor);
                 break;
             case BuildingManager.Buildings.CORE:
-                nearest = AssignNearest(dist, nearest, layer_conveyor);
+                AssignNearest(ref dist, ref nearest, layer_conveyor);
+                break;
+            case BuildingManager.Buildings.FURNACE:
+                AssignNearest(ref dist, ref nearest, layer_conveyor);
                 break;
         }
 
@@ -275,24 +278,19 @@ public class Builder : MonoBehaviour
         }
     }
 
-    private GameObject AssignNearest(float dist, GameObject nearest, LayerMask layer)
+    private void AssignNearest(ref float dist, ref GameObject nearest, LayerMask layer)
     {
-        Collider[] colls_drill = Physics.OverlapSphere(curr_build_ob.transform.position, 8.5f, layer);
-        if (colls_drill.Length > 0)
+        Collider[] colls = Physics.OverlapSphere(curr_build_ob.transform.position, 8.5f, layer);
+
+        for (int i = 0; i < colls.Length; i++)
         {
-            dist = Vector3.Distance(curr_build_ob.transform.position, colls_drill[0].transform.position);
-            nearest = colls_drill[0].gameObject;
-            for (int i = 0; i < colls_drill.Length; i++)
+            float newDist = Vector3.Distance(curr_build_ob.transform.position, colls[i].transform.position);
+            if (newDist < dist)
             {
-                if (Vector3.Distance(curr_build_ob.transform.position, colls_drill[i].transform.position) < dist)
-                {
-                    nearest = colls_drill[i].gameObject;
-                    dist = Vector3.Distance(curr_build_ob.transform.position, colls_drill[i].transform.position);
-                }
+                dist = newDist;
+                nearest = colls[i].gameObject;
             }
         }
-
-        return nearest;
     }
 
     public void CreateLineOfConection(GameObject building, Vector3 dest)
@@ -332,6 +330,7 @@ public class Builder : MonoBehaviour
             switch (curr_build)
             {
                 case BuildingManager.Buildings.CONVEYOR:
+                case BuildingManager.Buildings.FURNACE:
                     curr_build_ob.GetComponent<Conveyor>().StartConveyor();
                     break;
                 case BuildingManager.Buildings.DRILL:
@@ -345,9 +344,6 @@ public class Builder : MonoBehaviour
                     break;
                 case BuildingManager.Buildings.TURRET:
                     curr_build_ob.GetComponent<Turret>().Start_Turret();
-                    break;
-                case BuildingManager.Buildings.FURNACE:
-                    curr_build_ob.GetComponent<Furnace>().Start_Furnace();
                     break;
             }
 

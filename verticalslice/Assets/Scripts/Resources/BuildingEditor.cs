@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.HID;
 
 public class BuildingEditor : MonoBehaviour
 {
@@ -13,9 +15,13 @@ public class BuildingEditor : MonoBehaviour
     [Header("References")]
     [SerializeField] private GameObject selected_building;
     [SerializeField] private Material line_material;
+    [SerializeField] private Material line_deselect_material;
     [SerializeField] private Material outline_material;
     [SerializeField] private UnityEngine.UI.Image sliced_right_click;
     [SerializeField] private UnityEngine.UI.Image right_click_img;
+
+    private LineRenderer line_player;
+    private Vector3 pos_line_player_target;
 
     private bool right_click_pressed = false;
     private float delta = 0;
@@ -25,6 +31,17 @@ public class BuildingEditor : MonoBehaviour
 
     private Dictionary<GameObject, Material[]> trackedObjectMaterials = new Dictionary<GameObject, Material[]>();
 
+
+    private void Start()
+    {
+        line_player = gameObject.AddComponent<LineRenderer>();
+        line_player.enabled = false;
+
+        line_player.startWidth = 0.01f;
+        line_player.endWidth = 0.01f;
+
+        line_player.material = line_material;
+    }
     public void ChangeEditorMode(InputAction.CallbackContext con)
     {
         if (con.performed)
@@ -37,6 +54,8 @@ public class BuildingEditor : MonoBehaviour
             }
             else
             {
+                line_player.enabled = true;
+                line_player.SetPositions(new Vector3[2]{ transform.position, transform.position});
                 GameManager.gm.ShowText("Edit mode ON", 0);
             }
         }
@@ -52,7 +71,9 @@ public class BuildingEditor : MonoBehaviour
         right_click_pressed = false;
 
         if (line_r != null)
-            line_r.enabled = false;
+            line_r.material = line_deselect_material;
+
+        line_player.enabled = false;
 
         sliced_right_click.fillAmount = 0;
         right_click_img.gameObject.SetActive(false);
@@ -84,7 +105,7 @@ public class BuildingEditor : MonoBehaviour
                         {
                             case BuildingManager.Buildings.CONVEYOR:
                                 BuildingLife selected_bl = selected_building.GetComponent<BuildingLife>();
-                                if (selected_bl.building_type == BuildingManager.Buildings.CONVEYOR)
+                                if (selected_bl.building_type == BuildingManager.Buildings.CONVEYOR) // Ha seleccionado antes al conveyor
                                 {
                                     Conveyor m_conv = selected_building.GetComponent<Conveyor>();
                                     m_conv.nearest_conveyor = hit.collider.GetComponent<Conveyor>();
@@ -108,10 +129,6 @@ public class BuildingEditor : MonoBehaviour
                                     selected_building.GetComponent<Core>().CheckSurroundings();
                                     m_conv.CreateLineOfConection(new Vector3[2] { m_conv.transform.position, selected_building.transform.position });
                                     m_conv.can_deposite = true;
-                                }
-                                else if (selected_bl.building_type == BuildingManager.Buildings.FURNACE)
-                                {
-                                    selected_bl.GetComponent<Furnace>().Start_Furnace();
                                 }
                                 break;
                             case BuildingManager.Buildings.CORE:
@@ -138,12 +155,9 @@ public class BuildingEditor : MonoBehaviour
                                     }
                                 }
                                 break;
-                            case BuildingManager.Buildings.FURNACE:
-                                bl.GetComponent<Furnace>().Start_Furnace();
-                                break;
                         }
                         selected_building = null;
-
+                        pos_line_player_target = transform.position;
                     }
                     right_click_img.gameObject.SetActive(true);
                     sliced_right_click.gameObject.SetActive(true);
@@ -188,6 +202,8 @@ public class BuildingEditor : MonoBehaviour
 
     private void Update()
     {
+        if (canEdit) line_player.SetPositions(new Vector3[2] { transform.position, pos_line_player_target });
+
         if (selected_building == null) return;
 
         if (Vector3.Distance(transform.position, selected_building.transform.position) > edit_range * 1.2f)
@@ -213,13 +229,19 @@ public class BuildingEditor : MonoBehaviour
         {
             return;
         }
+
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Camera.main.transform.forward, out hit, edit_range))
         {
             if (hit.collider.tag == builds_tag)
             {
+                pos_line_player_target = hit.point;
                 StartCoroutine(ChangeMaterial(hit.transform.gameObject, hit));
             }
+        }
+        else
+        {
+            pos_line_player_target = transform.position;
         }
     }
 
