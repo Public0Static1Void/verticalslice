@@ -12,6 +12,11 @@ public class Drill : MonoBehaviour
     public float efficency;
     public float amount_stored;
     public float max_stored;
+
+    public float drill_range;
+
+    public float rotate_speed;
+    public float float_speed;
     
     public float recoil;
     private float delta;
@@ -23,6 +28,7 @@ public class Drill : MonoBehaviour
 
     void Update()
     {
+        transform.Rotate(new Vector3(0, rotate_speed * Time.deltaTime, 0));
         if (can_drill)
         {
             delta += Time.deltaTime;
@@ -57,7 +63,7 @@ public class Drill : MonoBehaviour
 
         for (int i = 0; i < directions.Length; i++)
         {
-            if (Physics.Raycast(directions[i], -transform.up, out hit, transform.localScale.y))
+            if (Physics.Raycast(directions[i], transform.up, out hit, transform.localScale.y * drill_range))
             {
                 if (hit.transform.TryGetComponent<Resource>(out Resource r))
                 {
@@ -93,7 +99,7 @@ public class Drill : MonoBehaviour
         Gizmos.color = Color.yellow;
         for (int i = 0; i < directions.Length; i++)
         {
-            Gizmos.DrawRay(directions[i], -transform.up * transform.localScale.y);
+            Gizmos.DrawRay(directions[i], transform.up * transform.localScale.y * drill_range);
         }
     }
 }

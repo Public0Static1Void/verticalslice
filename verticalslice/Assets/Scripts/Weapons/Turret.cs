@@ -23,6 +23,8 @@ public class Turret : MonoBehaviour
     private Rigidbody cannon_rb;
     public void Start_Turret()
     {
+        Destroy(transform.GetChild(0).gameObject);
+
         cannon = Instantiate(cannon);
         cannon.transform.position = transform.position + transform.forward + offset;
         cannon.transform.rotation = transform.rotation;
@@ -76,7 +78,7 @@ public class Turret : MonoBehaviour
         // Cannon rotation
         dif = current_target.transform.position - cannon.transform.position;
         rot = Quaternion.LookRotation(dif);
-        rot = new Quaternion(rot.x, rot.y, rot.z, rot.w);
+        rot = new Quaternion(rot.x  + 90, rot.y, rot.z, rot.w);
         cannon.transform.position = transform.forward + transform.position + offset;
         cannon.transform.rotation = Quaternion.RotateTowards(cannon.transform.rotation, rot, 1.5f);
     }

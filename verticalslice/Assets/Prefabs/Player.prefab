@@ -453,7 +453,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildings:
   - {fileID: 4896915743151392791, guid: ac05424fc5ca07b4180e3b4c9454a9a1, type: 3}
-  - {fileID: 4364052898318508080, guid: 19ad4827bf97b4a4aafdadfc014a81fa, type: 3}
+  - {fileID: 87337696463012964, guid: 19ad4827bf97b4a4aafdadfc014a81fa, type: 3}
   - {fileID: 5739981192844397164, guid: 7dd568ff2ad7ea5409ce6844579ee4ad, type: 3}
   build_menu: {fileID: 0}
   iron_cost: {fileID: 0}
@@ -463,6 +463,7 @@ MonoBehaviour:
   holographic_material: {fileID: 2100000, guid: 96923db4dcaae9c4987498afb2c5c72d, type: 2}
   line_material: {fileID: 2100000, guid: d911be0c7b7a9c044bbf27b81ee957c4, type: 2}
   line_connected_material: {fileID: 2100000, guid: bcca9100f3a63314db7c1f60ee47cae4, type: 2}
+  construction_material: {fileID: 0}
   curr_build: 5
   layer_conveyor:
     serializedVersion: 2

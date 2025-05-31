@@ -19,6 +19,7 @@ public class Builder : MonoBehaviour
 
     public Material holographic_material;
     public Material line_material, line_connected_material;
+    public Material construction_material;
     private Material[] object_original_materials;
 
     public BuildingManager.Buildings curr_build = BuildingManager.Buildings.LAST_NO_USE;
@@ -106,7 +107,7 @@ public class Builder : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (relocate)
+        if (relocate && curr_build_ob != null)
         {
             RaycastHit hit;
             if (Physics.Raycast(curr_build_ob.transform.position + Vector3.up, -Vector3.up, out hit))
@@ -217,10 +218,10 @@ public class Builder : MonoBehaviour
         distance_from_player = max_distance_from_player / 2;
 
         Debug.Log("Building " + build);
-        curr_build_ob = Instantiate(buildings[(int)build], transform.position + (transform.forward * distance_from_player), Quaternion.identity);
+        curr_build_ob = Instantiate(buildings[(int)build], transform.position + (transform.forward * distance_from_player), buildings[(int)build].transform.rotation);
         /// Guarda el material original del objeto y le pone uno holográfico
         object_original_materials = curr_build_ob.GetComponent<MeshRenderer>().materials;
-        curr_build_ob.GetComponent<MeshRenderer>().SetMaterials(new List<Material> { holographic_material });
+        SetObjectMaterial(curr_build_ob, holographic_material);
         curr_build = build;
 
         curr_build_ob.AddComponent<LineRenderer>();
@@ -245,6 +246,19 @@ public class Builder : MonoBehaviour
         sliced_right_click.gameObject.SetActive(true);
 
         relocate = true;
+    }
+
+    private void SetObjectMaterial(GameObject ob, Material mat)
+    {
+        ob.GetComponent<MeshRenderer>().SetMaterials(new List<Material> { mat });
+
+        if (ob.transform.childCount > 0)
+        {
+            foreach (Transform child in ob.transform)
+            {
+                SetObjectMaterial(child.gameObject, mat);
+            }
+        }
     }
 
     private void CheckNearestConnection()
@@ -327,42 +341,74 @@ public class Builder : MonoBehaviour
         {
             relocate = false;
 
-            switch (curr_build)
-            {
-                case BuildingManager.Buildings.CONVEYOR:
-                case BuildingManager.Buildings.FURNACE:
-                    curr_build_ob.GetComponent<Conveyor>().StartConveyor();
-                    break;
-                case BuildingManager.Buildings.DRILL:
-                    curr_build_ob.GetComponent<Drill>().StartDrill();
-                    break;
-                case BuildingManager.Buildings.CORE:
-                    curr_build_ob.GetComponent<Core>().StartCore();
-                    break;
-                case BuildingManager.Buildings.WALL:
-                    curr_build_ob.GetComponent<NavMeshObstacle>().carving = true;
-                    break;
-                case BuildingManager.Buildings.TURRET:
-                    curr_build_ob.GetComponent<Turret>().Start_Turret();
-                    break;
-            }
-
-            curr_build_ob.GetComponent<MeshRenderer>().materials = object_original_materials;
-            Collider[] colls = curr_build_ob.GetComponents<Collider>();
-            foreach (Collider coll in colls)
-            {
-                coll.enabled = true;
-            }
-
-            curr_build_ob.GetComponent<LineRenderer>().material = line_connected_material;
-
-            curr_build_ob = null;
-            curr_build = BuildingManager.Buildings.LAST_NO_USE;
-
-            right_click.gameObject.SetActive(false);
-            hold_right_click.gameObject.SetActive(false);
-            sliced_right_click.gameObject.SetActive(false);
+            StartCoroutine(TransitionBuildingMaterial(curr_build, curr_build_ob));
         }
+    }
+
+    private IEnumerator TransitionBuildingMaterial(BuildingManager.Buildings building_type, GameObject ob_building)
+    {
+        curr_build_ob = null;
+        curr_build = BuildingManager.Buildings.LAST_NO_USE;
+
+        GameObject ob = ob_building;
+        float transition = 0;
+        MeshRenderer mesh_r = ob.GetComponent<MeshRenderer>();
+
+        Material[] original_materials = object_original_materials;
+
+        // Inicia el comportamiento del edificio
+        switch (building_type)
+        {
+            case BuildingManager.Buildings.CONVEYOR:
+            case BuildingManager.Buildings.FURNACE:
+                ob.GetComponent<Conveyor>().StartConveyor();
+                break;
+            case BuildingManager.Buildings.DRILL:
+                ob.GetComponent<Drill>().StartDrill();
+                break;
+            case BuildingManager.Buildings.CORE:
+                ob.GetComponent<Core>().StartCore();
+                break;
+            case BuildingManager.Buildings.WALL:
+                ob.GetComponent<NavMeshObstacle>().carving = true;
+                break;
+            case BuildingManager.Buildings.TURRET:
+                ob.GetComponent<Turret>().Start_Turret();
+                break;
+        }
+
+
+
+
+        right_click.gameObject.SetActive(false);
+        hold_right_click.gameObject.SetActive(false);
+        sliced_right_click.gameObject.SetActive(false);
+
+        // Hace el efecto de construcción
+
+        Texture main_texture = original_materials[0].GetTexture("_MainTex");
+
+        mesh_r.material = construction_material;
+        mesh_r.material.SetTexture("_Target_Texture", main_texture);
+        mesh_r.material.SetColor("_MainColor", original_materials[0].GetColor("_Color"));
+
+        mesh_r.material.SetFloat("_Transition", 0);
+        while (transition < 1)
+        {
+            transition += Time.deltaTime;
+            mesh_r.material.SetFloat("_Transition", transition);
+            yield return null;
+        }
+
+        /// Pone los materiales originales del edificio
+        ob.GetComponent<MeshRenderer>().materials = original_materials;
+        Collider[] colls = ob.GetComponents<Collider>();
+        foreach (Collider coll in colls)
+        {
+            coll.enabled = true;
+        }
+
+        ob.GetComponent<LineRenderer>().material = line_connected_material;
     }
 
     void CancelBuilding()

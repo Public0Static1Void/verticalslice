@@ -116,6 +116,8 @@ public class BuildingEditor : MonoBehaviour
                                     line_r.enabled = true;
 
                                     m_conv.can_deposite = true;
+
+                                    Destroy(hit.collider.GetComponent<LineRenderer>());
                                 }
                                 else if (selected_bl.building_type == BuildingManager.Buildings.DRILL) // Ha seleccionado antes al drill
                                 {
