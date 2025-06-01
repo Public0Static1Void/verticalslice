@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     public float delta = 0;
 
     Vector2 input;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();

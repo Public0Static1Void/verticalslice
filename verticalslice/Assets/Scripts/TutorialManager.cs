@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -27,10 +29,24 @@ public class TutorialManager : MonoBehaviour
         textBox.SetText("Place <color=blue>conveyors</color> to transport materials");
         textBox.ShowText();
 
-        player_builder.events_place.AddListener(() =>
+        UnityAction action = () =>
         {
-            textBox.SetText("Place a <color=blue>core</color> to store your minerals. Your core is your most important structure.");
+            textBox.SetText("Place a <color=blue>core</color> to store your minerals. If your core is destroyed, <color=red>you lose.</color>");
             textBox.ShowText();
-        });
+
+            StartCoroutine(WaitToAddEvent(textBox, () => { textBox.HideText(); }));
+        };
+        StartCoroutine(WaitToAddEvent(textBox, action));
+
+    }
+
+    private IEnumerator WaitToAddEvent(TextBox textBox, UnityAction action)
+    {
+        while (textBox.showing_text)
+        {
+            yield return null;
+        }
+
+        player_builder.events_place.AddListener(action);
     }
 }

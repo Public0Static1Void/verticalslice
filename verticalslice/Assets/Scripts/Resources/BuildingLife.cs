@@ -12,7 +12,16 @@ public class BuildingLife : MonoBehaviour
     public int iron_cost = 0;
     public int stone_cost = 0;
     public int coal_cost = 0;
-    
+
+    [HideInInspector]
+    public BuildingCanvas buildingCanvas;
+
+    private void Start()
+    {
+        buildingCanvas = GetComponent<BuildingCanvas>();
+        if (buildingCanvas != null)
+            buildingCanvas.Init();
+    }
     public void ChangeLife(int amount)
     {
         life += amount;

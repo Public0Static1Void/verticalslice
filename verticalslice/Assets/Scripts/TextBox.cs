@@ -12,7 +12,7 @@ public class TextBox : MonoBehaviour
 
     public float text_speed;
 
-    private bool showing_text;
+    public bool showing_text;
 
     public void SetText(string text)
     {
@@ -45,7 +45,7 @@ public class TextBox : MonoBehaviour
         string curr_text = "";
 
         ui_text.text = text_to_show;
-        ui_txt_bg.rectTransform.sizeDelta = new Vector2(ui_txt_bg.rectTransform.sizeDelta.x, ui_text.preferredHeight * 2.5f > 600 ? 600 : ui_text.preferredHeight * 1.5f);
+        ui_txt_bg.rectTransform.sizeDelta = new Vector2(ui_txt_bg.rectTransform.sizeDelta.x, ui_text.preferredHeight * 1.1f > 600 ? 600 : ui_text.preferredHeight * 1.1f);
         ui_text.text = "";
 
         while (ui_text.text.Length < text_to_show.Length && curr_char < text_to_show.Length)
@@ -75,7 +75,7 @@ public class TextBox : MonoBehaviour
                 Color col = ui_text.color;
                 ui_text.color = new Color(col.r, col.g, col.b, ui_text.color.a + Time.deltaTime);
             }
-            if (ui_text.color.a < 1)
+            if (ui_txt_bg.color.a < 0.5f)
             {
                 Color col = ui_txt_bg.color;
                 ui_txt_bg.color = new Color(col.r, col.g, col.b, ui_txt_bg.color.a + Time.deltaTime);
@@ -83,5 +83,7 @@ public class TextBox : MonoBehaviour
 
             yield return null;
         }
+
+        showing_text = false;
     }
 }

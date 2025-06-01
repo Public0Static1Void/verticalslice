@@ -11,7 +11,8 @@ public class ResourceManager : MonoBehaviour
     public List<Resource> resources;
     public List<int> resources_amounts;
     public List<UnityEngine.UI.Text> resources_text;
-    void Start()
+    public List<string> resources_descriptions;
+    void Awake()
     {
         if (instance == null)
             instance = this;
@@ -41,6 +42,14 @@ public class ResourceManager : MonoBehaviour
         {
             resources_amounts.Add(0);
         }
+
+        List<ArrayList> descriptions_from_db = Database.SendQuery("SELECT \"description\" FROM Buildings_descriptions");
+        resources_descriptions = new List<string>();
+        for (int i = 0; i < descriptions_from_db.Count; i++) 
+        {
+            resources_descriptions.Add(descriptions_from_db[i][0].ToString());
+        }
+
 
         AddResource(Resources.GOLD, 1000);
         AddResource(Resources.IRON, 1000);

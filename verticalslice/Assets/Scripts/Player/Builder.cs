@@ -256,7 +256,9 @@ public class Builder : MonoBehaviour
 
     private void SetObjectMaterial(GameObject ob, Material mat)
     {
-        ob.GetComponent<MeshRenderer>().SetMaterials(new List<Material> { mat });
+        MeshRenderer mesh_r = ob.GetComponent<MeshRenderer>();
+        if (mesh_r != null)
+            mesh_r.SetMaterials(new List<Material> { mat });
 
         if (ob.transform.childCount > 0)
         {

@@ -432,7 +432,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canEdit: 0
   builds_tag: Building
-  edit_range: 5
+  edit_range: 8
   selected_building: {fileID: 0}
   line_material: {fileID: 2100000, guid: d911be0c7b7a9c044bbf27b81ee957c4, type: 2}
   line_deselect_material: {fileID: 2100000, guid: bcca9100f3a63314db7c1f60ee47cae4, type: 2}
@@ -485,6 +485,9 @@ MonoBehaviour:
   relocate: 0
   right_click_pressed: 0
   distance_mode: 0
+  events_place:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!82 &5137584937230765874
 AudioSource:
   m_ObjectHideFlags: 0
@@ -600,6 +603,7 @@ MonoBehaviour:
   iron_cost: 0
   stone_cost: 0
   coal_cost: 0
+  buildingCanvas: {fileID: 0}
 --- !u!1 &8709804820537540960
 GameObject:
   m_ObjectHideFlags: 0

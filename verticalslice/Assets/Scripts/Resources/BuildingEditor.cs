@@ -66,6 +66,8 @@ public class BuildingEditor : MonoBehaviour
         GameManager.gm.ShowText("Edit mode OFF", 2);
         canEdit = false;
         
+        selected_building.GetComponent<BuildingCanvas>().HideDescription();
+
         selected_building = null;
         delta = 0;
         right_click_pressed = false;
@@ -96,6 +98,8 @@ public class BuildingEditor : MonoBehaviour
                     {
                         selected_building = hit.collider.gameObject;
                         GameManager.gm.ShowText("Selected building: " + hit.collider.name, 0);
+
+                        bl.buildingCanvas.ShowDescription();
 
                         SetLineBetweenConveyors(selected_building.transform.position, hit.collider.GetComponent<Conveyor>());
                     }
@@ -158,6 +162,8 @@ public class BuildingEditor : MonoBehaviour
                                 }
                                 break;
                         }
+
+                        bl.buildingCanvas.HideDescription();
                         selected_building = null;
                         pos_line_player_target = transform.position;
                     }

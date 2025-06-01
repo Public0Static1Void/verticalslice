@@ -10,7 +10,7 @@ public class Core : MonoBehaviour
     [SerializeField] private float core_radius;
     [SerializeField] private LayerMask conveyor_layer;
 
-    public void StartCore()
+    private void Start()
     {
         if (instance == null)
         {
@@ -21,6 +21,9 @@ public class Core : MonoBehaviour
             Debug.Log("You can't create two core");
             Destroy(this.gameObject);
         }
+    }
+    public void StartCore()
+    {
         CheckSurroundings();
     }
     public void CheckSurroundings()
