@@ -6,6 +6,8 @@ using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.Events;
+using System.ComponentModel;
 
 public class Builder : MonoBehaviour
 {
@@ -48,6 +50,10 @@ public class Builder : MonoBehaviour
     private bool changed = false;
 
     private List<BuildingLife> buildings_life = new List<BuildingLife>();
+
+    [Header("Events")]
+    [Description("Estos eventos se borrarán una vez ejecutados")]
+    public UnityEvent events_place;
 
     // Building rotation
     private float building_rot;
@@ -377,7 +383,9 @@ public class Builder : MonoBehaviour
                 break;
         }
 
-
+        // Ejecuta los eventos y los borra
+        events_place.Invoke();
+        events_place.RemoveAllListeners();
 
 
         right_click.gameObject.SetActive(false);
