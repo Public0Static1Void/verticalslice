@@ -12,9 +12,8 @@ GameObject:
   - component: {fileID: 1292975431342679656}
   - component: {fileID: 3495487890334602547}
   - component: {fileID: 8749438572570650341}
-  - component: {fileID: 6174532224775992464}
   - component: {fileID: 4363614313140076259}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Iron
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,33 +106,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &6174532224775992464
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 801089206169426569}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &4363614313140076259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,7 +131,7 @@ GameObject:
   - component: {fileID: 7584628021644991558}
   - component: {fileID: 8296456779865546268}
   - component: {fileID: 7162698507164441041}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Slatinum_Node (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,7 +237,7 @@ GameObject:
   - component: {fileID: 7075929987920137396}
   - component: {fileID: 5422146177349934601}
   - component: {fileID: 139343380971574964}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Slatinum_Node (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -370,7 +342,7 @@ GameObject:
   - component: {fileID: 4606739189069198751}
   - component: {fileID: 3555263460290514651}
   - component: {fileID: 2111943535271085199}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Slatinum_Node (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -452,7 +424,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8506136694432850891}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Iron mine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -492,7 +464,7 @@ GameObject:
   - component: {fileID: 5165093484112448159}
   - component: {fileID: 9212959693274130940}
   - component: {fileID: 6937968391411012122}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Slatinum_Node (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -598,7 +570,7 @@ GameObject:
   - component: {fileID: 2564553484918524784}
   - component: {fileID: 6234142293987810630}
   - component: {fileID: 7715728199852427122}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Slatinum_Node (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
